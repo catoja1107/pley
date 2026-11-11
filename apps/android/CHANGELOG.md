@@ -8,6 +8,13 @@ describes how they are made.
 
 ## [Unreleased]
 
+### Changed
+
+On Android TV:
+
+- Home opens on its rows. The banner of featured titles above them is
+  off unless Settings → Subtitles and display → Home banner turns it on.
+
 ## [0.1.11] - 2026-11-10
 
 ### Fixed
