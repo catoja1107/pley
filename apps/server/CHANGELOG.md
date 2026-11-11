@@ -9,6 +9,27 @@ describes how they are made.
 
 ## [Unreleased]
 
+### Added
+
+- Settings → Transcoder has "Allow video transcoding". Turned off, Pley
+  only copies video: files play as they are or with just their sound
+  transcoded, a quality asked for plays the Original, and a file whose
+  video a device can't play doesn't play there, with a message that says
+  why. Players offer the Original quality alone, and the Plex- and
+  Jellyfin-compatible APIs follow the same rule.
+- "Max simultaneous video transcodes" limits the streams that transcode
+  video within "Max simultaneous total transcodes" (the limit there
+  before, which still counts every stream), so room can be kept for
+  streams that only need their sound transcoded. It starts at the total a
+  server already had, and is never more than it.
+
+### Changed
+
+- In Settings → Transcoder, the note under "Transcode in memory" says
+  only why it is off.
+- Dropdowns' carets stand in from their right edge instead of sitting
+  against it, and a dropdown that can't be changed is greyed out.
+
 ### Fixed
 
 - A movie titled with a number, such as "300", takes its year from its
