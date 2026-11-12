@@ -12,9 +12,8 @@ describes how they are made.
 
 ### Added
 
-- On a server with video transcoding turned off (Settings → Transcoder),
-  the Quality menu offers Original alone and Automatic plays it, rather
-  than ask for qualities the server would only answer with the Original.
+- When the server has video transcoding turned off, the Quality menu
+  offers only Original.
 
 ### Changed
 

@@ -12,9 +12,8 @@ describes how they are made.
 
 ### Added
 
-- On a server with video transcoding turned off (Settings → Transcoder),
-  Automatic plays the Original and takes no steps, and the remote is
-  offered Original alone.
+- When the server has video transcoding turned off, Automatic plays the
+  Original and the remote offers only Original.
 
 ## [0.1.7] - 2026-11-06
 
