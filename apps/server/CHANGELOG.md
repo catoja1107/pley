@@ -9,6 +9,14 @@ describes how they are made.
 
 ## [Unreleased]
 
+### Added
+
+- Editions named in a movie's file or folder name without the
+  `{edition-…}` tag, such as Director's Cut, Extended, Theatrical,
+  Unrated, Remastered or IMAX, are versions of one movie with their names.
+  Copies already listed as movies of their own join it once every file is
+  scanned again.
+
 ### Changed
 
 - Movies, shows, music and audiobooks without a picture show Pley's mark
@@ -21,9 +29,16 @@ describes how they are made.
   as long as its source stays available.
 - An idle server and its transcoder use far less of the processor and
   wake it far less often.
+- Files added or changed in a large library, or named in a refresh from
+  another tool, show up sooner.
+- A title a metadata source had nothing for gets its details once the
+  source adds them, without a Refresh.
 
 ### Fixed
 
+- Episodes added to a show that already has its details get theirs at the
+  next scan, and so do those of a show whose seasons TMDB didn't answer
+  for.
 - Renaming or moving files within a library no longer loses their
   progress, watched state, ratings, history, My List, playlists or added
   subtitles, and a movie or episode replaced by a copy named differently,
