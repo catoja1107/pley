@@ -4898,6 +4898,11 @@ on another administrator's account, but for the `GET`s
     its own adapters, loopback aside); `pley_out`: what Pley sent its
     clients, response bodies on every port (the web app's, Plex's and
     Jellyfin's);
+  - `pley_cpu`, `pley_memory`, `net_in` and `net_out` are read with every
+    sample for 30 s after someone asks; otherwise every 10 s, and the
+    samples in between take the averages over those 10 s (and Pley's memory
+    at their end). A sample still waiting for them isn't answered: it comes
+    with a later answer, once they are read;
   - `clients`: who Pley is sending to now, the busiest first (50 at most),
     `sent` in bytes a second over the last 10 seconds. `user` and `device`
     are the account and device a request signed in as ("Chrome on

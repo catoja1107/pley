@@ -19,6 +19,8 @@ describes how they are made.
 - Pley's license gains a permission for app stores: Pley may be
   distributed through stores whose terms add restrictions of their own,
   as long as its source stays available.
+- An idle server and its transcoder use far less of the processor and
+  wake it far less often.
 
 ### Fixed
 
