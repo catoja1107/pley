@@ -60,6 +60,8 @@ pub struct AppState {
 /// How long the work directory's size as measured stands: asked for after
 /// that, it is measured again.
 const WORK_DIR_MEASURED_FOR: Duration = Duration::from_secs(5);
+/// How long the metrics wait for the work directory to be measured again.
+const WORK_DIR_WAIT: Duration = Duration::from_secs(2);
 
 impl AppState {
     #[allow(clippy::too_many_arguments)]
@@ -100,39 +102,42 @@ impl AppState {
 
     /// Measures the work directory on the blocking pool, unless it is being
     /// measured already: a walk over every file in it, thousands once the
-    /// caches fill.
-    pub fn measure_work_dir(self: &Arc<Self>) {
+    /// caches fill. The walk, to wait for if need be.
+    pub fn measure_work_dir(self: &Arc<Self>) -> Option<tokio::task::JoinHandle<()>> {
         {
             let mut measured = self.work_dir_measured.lock();
             if measured.1 {
-                return;
+                return None;
             }
             measured.1 = true;
         }
         let state = self.clone();
-        tokio::spawn(async move {
+        Some(tokio::spawn(async move {
             let dir = state.work_dir.clone();
             if let Ok(bytes) = tokio::task::spawn_blocking(move || dir_size(&dir)).await {
                 state.work_dir_bytes.store(bytes, Ordering::Relaxed);
             }
             *state.work_dir_measured.lock() = (Some(Instant::now()), false);
-        });
+        }))
     }
 
-    /// The work directory's size as last measured, measured again in the
-    /// background when that was [`WORK_DIR_MEASURED_FOR`] ago or more: only
-    /// while someone asks (the server's dashboard, the metrics), so an idle
-    /// transcoder doesn't walk its caches every few seconds for no one.
-    fn work_dir_bytes(self: &Arc<Self>) -> u64 {
-        if self.work_dir_measured.lock().0.is_none_or(|at| at.elapsed() >= WORK_DIR_MEASURED_FOR) {
-            self.measure_work_dir();
-        }
-        self.work_dir_bytes.load(Ordering::Relaxed)
+    /// Measures the work directory again when it was measured
+    /// [`WORK_DIR_MEASURED_FOR`] ago or more: only while someone asks (the
+    /// server's dashboard, the metrics), so an idle transcoder doesn't walk
+    /// its caches every few seconds for no one.
+    fn remeasure_work_dir(self: &Arc<Self>) -> Option<tokio::task::JoinHandle<()>> {
+        let stale = self.work_dir_measured.lock().0.is_none_or(|at| at.elapsed() >= WORK_DIR_MEASURED_FOR);
+        if stale { self.measure_work_dir() } else { None }
     }
 
+    /// The status, with the work directory's size as last measured: the
+    /// server asks often (its dashboard every few seconds, library work
+    /// before each file) and doesn't wait for a walk; the next answer has
+    /// its size.
     fn status(self: &Arc<Self>) -> TranscoderStatus {
         let (running, hw) = self.jobs.slots.counts();
-        let work_dir_bytes = self.work_dir_bytes();
+        let _ = self.remeasure_work_dir();
+        let work_dir_bytes = self.work_dir_bytes.load(Ordering::Relaxed);
         TranscoderStatus {
             version: self.info.version.clone(),
             uptime_secs: self.started.elapsed().as_secs(),
@@ -265,6 +270,11 @@ async fn status(State(state): Shared) -> Json<TranscoderStatus> {
 }
 
 async fn metrics(State(state): Shared) -> impl IntoResponse {
+    // A scrape comes half a minute or more after the one before: the size
+    // as last measured would be that old.
+    if let Some(walk) = state.remeasure_work_dir() {
+        let _ = tokio::time::timeout(WORK_DIR_WAIT, walk).await;
+    }
     let body = render_prometheus(&state.status());
     ([(header::CONTENT_TYPE, "text/plain; version=0.0.4; charset=utf-8")], body)
 }
@@ -889,6 +899,22 @@ mod tests {
             measured = asked().await;
         }
         assert!(measured >= 1234, "{measured}");
+    }
+
+    #[tokio::test]
+    async fn the_metrics_wait_for_the_work_directory_to_be_measured() {
+        let dir = crate::testing::tempdir();
+        std::fs::write(dir.path().join("segment.ts"), vec![0u8; 1234]).unwrap();
+        let addr = serve(dir.path(), None).await;
+        let metrics = request(addr, "GET", "/metrics", None, None).await;
+        assert!(
+            metrics.body.contains(
+                "pley_transcoder_work_dir_bytes 1234
+"
+            ),
+            "{}",
+            metrics.body
+        );
     }
 
     #[tokio::test]

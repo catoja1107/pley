@@ -12,11 +12,16 @@
 //! process on the machine (Windows) or a read of each `/proc/<pid>/stat`
 //! (Linux), and the adapters' table, a few milliseconds of one processor on
 //! a desktop with hundreds of processes. Those are read with every sample
-//! while someone looks at the samples (the dashboard asks every 2 s), and
+//! while someone looks at the samples (the dashboard asks every 2 s) and
+//! while pley's processes come and go (FFmpegs starting and ending), and
 //! otherwise every [`UNWATCHED_EVERY`] samples: the samples between them
 //! wait for the next reading and take its averages, so the charts have a
 //! sample every 2 s either way, and an idle server doesn't list the
-//! machine's processes every 2 s for no one.
+//! machine's processes every 2 s for no one. A process's time counts only
+//! while it is seen running, so one that ended between two listings would
+//! be lost to pley's share and taken for another program's by the library
+//! work scheduler ([`Monitor::others_cpu`]): that is why pley's processes
+//! are listed with every sample while they come and go.
 
 use std::collections::{HashMap, VecDeque};
 use std::sync::Arc;
@@ -33,7 +38,9 @@ pub const INTERVAL: Duration = Duration::from_secs(2);
 /// While no one looks, pley's processes and the network adapters are read
 /// every this many samples (10 s).
 const UNWATCHED_EVERY: u32 = 5;
-/// How long someone looks at the samples after asking for them.
+/// How long someone looks at the samples after asking for them, and how
+/// long pley's processes are listed with every sample after one began or
+/// ended.
 const WATCHED_FOR: Duration = Duration::from_secs(30);
 /// The samples kept: five minutes of them.
 const KEEP: usize = 150;
@@ -52,15 +59,19 @@ pub struct Sample {
     /// The share of all the processors' time used since the sample before,
     /// 0 to 100, by everything on the machine.
     pub cpu: f32,
-    /// The same, by pley.
+    /// The same, by pley; between readings of pley's processes 10 s apart
+    /// (no one looking, none of them coming or going), the share over those
+    /// 10 s (see the module's documentation).
     pub pley_cpu: f32,
     /// Memory in use on the machine, in bytes (without what only caches
     /// files and could be given back at once).
     pub memory: u64,
-    /// Memory pley holds: its processes' resident sets, in bytes.
+    /// Memory pley holds: its processes' resident sets, in bytes, at the
+    /// reading of its processes that came with this sample.
     pub pley_memory: u64,
     /// What the machine's network adapters received since the sample
-    /// before, in bytes a second.
+    /// before, in bytes a second; like `pley_cpu`, over 10 s between
+    /// readings that far apart.
     pub net_in: u64,
     /// What they sent.
     pub net_out: u64,
@@ -144,6 +155,9 @@ impl Monitor {
             tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
             // The costly readings begin with the first sample.
             let mut since_costly = UNWATCHED_EVERY;
+            // Until when pley's processes are listed with every sample, one
+            // of them having begun or ended.
+            let mut busy_until = Instant::now();
             loop {
                 tokio::select! {
                     _ = stopping.cancelled() => break,
@@ -153,9 +167,12 @@ impl Monitor {
                     monitor.push(sample);
                 }
                 since_costly += 1;
-                if since_costly >= UNWATCHED_EVERY || monitor.watched() {
+                if since_costly >= UNWATCHED_EVERY || monitor.watched() || Instant::now() < busy_until {
                     monitor.fill(sampler.costly());
                     since_costly = 0;
+                    if sampler.came_and_went {
+                        busy_until = Instant::now() + WATCHED_FOR;
+                    }
                 }
                 *monitor.clients.lock() = sampler.clients();
             }
@@ -200,9 +217,17 @@ impl Monitor {
     pub fn others_cpu(&self, window: Duration) -> Option<f32> {
         let since = crate::util::now_ms() - window.as_millis() as i64;
         let history = self.history.lock();
-        let recent: Vec<f32> =
-            history.done().filter(|s| s.at >= since).map(|s| (s.cpu - s.pley_cpu).max(0.0)).collect();
-        (!recent.is_empty()).then(|| recent.iter().sum::<f32>() / recent.len() as f32)
+        // Pley's share of samples that waited is the average over them all,
+        // while the machine's is each one's own: the averages over the
+        // window are compared, not sample by sample, which would count a
+        // burst of pley's as other programs' in the sample it fell in.
+        let (mut cpu, mut pley, mut count) = (0.0, 0.0, 0);
+        for sample in history.done().filter(|s| s.at >= since) {
+            cpu += sample.cpu;
+            pley += sample.pley_cpu;
+            count += 1;
+        }
+        (count > 0).then(|| ((cpu - pley) / count as f32).max(0.0))
     }
 
     /// The samples taken after `since` (Unix milliseconds), or all of them;
@@ -263,6 +288,9 @@ struct Sampler {
     last_costly: Option<(Instant, Option<Network>)>,
     /// Each process's processor time at the costly readings before.
     processes: HashMap<(u32, u64), u64>,
+    /// Whether one of pley's processes began or ended between the last two
+    /// costly readings.
+    came_and_went: bool,
     /// What each client had been sent at the last few samples, newest last.
     clients: VecDeque<(Instant, HashMap<Client, u64>)>,
 }
@@ -288,7 +316,14 @@ struct Costly {
 
 impl Sampler {
     fn new(cpus: u32) -> Self {
-        Self { cpus, last: None, last_costly: None, processes: HashMap::new(), clients: VecDeque::new() }
+        Self {
+            cpus,
+            last: None,
+            last_costly: None,
+            processes: HashMap::new(),
+            came_and_went: false,
+            clients: VecDeque::new(),
+        }
     }
 
     /// A sample of what costs next to nothing to read, without pley's
@@ -319,6 +354,7 @@ impl Sampler {
         let tree = os::processes(std::process::id());
         let pley_memory = tree.iter().map(|p| p.memory).sum();
         let previous = std::mem::replace(&mut self.processes, tree.iter().map(|p| (p.key, p.cpu_ns)).collect());
+        self.came_and_went = came_and_went(&previous, &self.processes);
         let (then, network_before) = self.last_costly.replace((now, network))?;
         let seconds = now.duration_since(then).as_secs_f64();
         let elapsed = now.duration_since(then).as_nanos() as f64 * f64::from(self.cpus);
@@ -412,6 +448,12 @@ fn share(part: f64, whole: f64) -> f32 {
         return 0.0;
     }
     ((part / whole * 100.0).clamp(0.0, 100.0) * 10.0).round() as f32 / 10.0
+}
+
+/// Whether a process is in one listing and not in the other: one began or
+/// ended between them.
+fn came_and_went(before: &HashMap<(u32, u64), u64>, now: &HashMap<(u32, u64), u64>) -> bool {
+    before.len() != now.len() || now.keys().any(|key| !before.contains_key(key))
 }
 
 #[cfg(windows)]
@@ -939,6 +981,31 @@ mod tests {
         };
         assert_eq!(answered, [Sample { at: now - 4_000, ..waited }, Sample { at: now - 2_000, ..waited }]);
         assert_eq!(monitor.others_cpu(Duration::from_secs(60)), Some((40.0 + 50.0 + 50.0) / 3.0));
+    }
+
+    #[test]
+    fn a_burst_of_pleys_over_waiting_samples_is_not_taken_for_others() {
+        let monitor = Monitor::new();
+        let now = crate::util::now_ms();
+        // Pley takes 80 % in one sample of five and other programs 5 % in
+        // each; the reading over the five gives pley 16 % in each.
+        for (at, cpu) in [(10_000, 85.0), (8_000, 5.0), (6_000, 5.0), (4_000, 5.0), (2_000, 5.0)] {
+            monitor.push(Sample { at: now - at, cpu, ..Sample::default() });
+        }
+        monitor.fill(Some(Costly { pley_cpu: 16.0, pley_memory: 1, net_in: 0, net_out: 0 }));
+        let others = monitor.others_cpu(Duration::from_secs(60)).unwrap();
+        assert!((others - 5.0).abs() < 0.01, "{others}");
+    }
+
+    #[test]
+    fn processes_beginning_or_ending_are_noticed() {
+        let listing = |keys: &[(u32, u64)]| keys.iter().map(|&key| (key, 0)).collect::<HashMap<_, _>>();
+        let both = listing(&[(1, 10), (2, 20)]);
+        assert!(!came_and_went(&both, &listing(&[(2, 20), (1, 10)])));
+        assert!(came_and_went(&both, &listing(&[(1, 10)])), "one ended");
+        assert!(came_and_went(&both, &listing(&[(1, 10), (2, 20), (3, 30)])), "one began");
+        assert!(came_and_went(&both, &listing(&[(1, 10), (2, 25)])), "an id used again");
+        assert!(came_and_went(&HashMap::new(), &both), "the first listing");
     }
 
     #[test]

@@ -1690,7 +1690,9 @@ a field it can't measure is left out:
   `thumbnails_total`, `subtitle_extractions_total`, `keyframe_scans_total`.
 - **Gauges**: `uptime_seconds`, `running_processes`, `hardware_processes` (of
   those, on a hardware encoder), `max_jobs`, `jobs`, `work_dir_bytes`
-  (measured at start-up and again as it is asked for, at most every 5 s),
+  (measured at start-up and again as it is asked for, at most every 5 s;
+  `/metrics` waits up to 2 s for the new size, `/v1/status` answers with the
+  one before),
   `background_paused`, `trickplay_running`, and per job `job_speed{job}`
   (real-time multiplier), `job_fps{job}` and `jobs_by_state{state}`.
 
