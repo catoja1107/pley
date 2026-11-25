@@ -2,6 +2,7 @@
   "title": "Paramètres",
   "categories": {
     "profile": "Profil",
+    "appearance": "Apparence",
     "playback": "Lecture",
     "server": "Serveur",
     "diagnostics": "Diagnostic",
@@ -24,6 +25,30 @@
     "title": "Langue",
     "automatic": "Automatique ({{language}})",
     "tooOld": "Mettez Pley à jour sur le serveur pour garder {{language}} pour le compte."
+  },
+  "appearance": {
+    "theme": "Thème",
+    "accent": "Couleur d’accent",
+    "automatic": "Automatique ({{theme}})",
+    "automaticHint": "Clair ou sombre selon le réglage de chaque téléphone ou ordinateur, sombre sur une TV.",
+    "themeAccent": "Celle du thème ({{accent}})",
+    "themeAccentHint": "La couleur qui va avec le thème.",
+    "tooOld": "Mettez Pley à jour sur le serveur pour utiliser cette apparence.",
+    "themes": {
+      "dark": "Sombre",
+      "light": "Clair",
+      "midnight": "Minuit",
+      "obsidian": "Obsidienne",
+      "arctic": "Arctique"
+    },
+    "accents": {
+      "sky": "Ciel",
+      "blue": "Bleu",
+      "emerald": "Émeraude",
+      "teal": "Bleu canard",
+      "amber": "Ambre",
+      "violet": "Violet"
+    }
   },
   "quality": "Qualité",
   "autoplay": "Épisode suivant automatique",

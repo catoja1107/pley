@@ -2,6 +2,7 @@
   "title": "Settings",
   "categories": {
     "profile": "Profile",
+    "appearance": "Appearance",
     "playback": "Playback",
     "server": "Server",
     "diagnostics": "Diagnostics",
@@ -24,6 +25,30 @@
     "title": "Language",
     "automatic": "Automatic ({{language}})",
     "tooOld": "Update Pley on the server to keep {{language}} for the account."
+  },
+  "appearance": {
+    "theme": "Theme",
+    "accent": "Accent color",
+    "automatic": "Automatic ({{theme}})",
+    "automaticHint": "Light or Dark as each phone or computer is set, Dark on a TV.",
+    "themeAccent": "The theme's own ({{accent}})",
+    "themeAccentHint": "The color that goes with the theme.",
+    "tooOld": "Update Pley on the server to use this look.",
+    "themes": {
+      "dark": "Dark",
+      "light": "Light",
+      "midnight": "Midnight",
+      "obsidian": "Obsidian",
+      "arctic": "Arctic"
+    },
+    "accents": {
+      "sky": "Sky",
+      "blue": "Blue",
+      "emerald": "Emerald",
+      "teal": "Teal",
+      "amber": "Amber",
+      "violet": "Violet"
+    }
   },
   "quality": "Quality",
   "autoplay": "Play the next episode by itself",

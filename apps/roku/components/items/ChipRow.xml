@@ -30,4 +30,5 @@
     <script type="text/brightscript" uri="pkg:/components/items/ChipRow.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/I18n.brs" />
     <script type="text/brightscript" uri="pkg:/components/shared/Type.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
 </component>

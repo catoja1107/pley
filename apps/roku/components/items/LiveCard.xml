@@ -15,6 +15,7 @@
     <script type="text/brightscript" uri="pkg:/components/items/LiveCard.brs" />
     <script type="text/brightscript" uri="pkg:/components/shared/Type.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/I18n.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <Rectangle id="frame" color="0x262B35FF" />
         <Rectangle id="plate" color="0x2E3440FF" />

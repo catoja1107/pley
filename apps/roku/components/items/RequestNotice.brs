@@ -16,6 +16,7 @@ sub init()
     ' Pley's type where the markup names Roku's (a list's items are made
     ' after the scene restyled the screen).
     uiRestyle(m.top)
+    uiRecolor(m.top)
 end sub
 
 sub onNotice()

@@ -81,7 +81,7 @@ sub onSeason(event as object)
     if index < 0 or index >= m.rows.Count() then return
     row = m.rows[index]
     if not row.askable
-        m.line.color = "0xA1A9B6FF"
+        m.line.color = uiTint("0xA1A9B6FF")
         m.line.text = t("requests.season.why", { season: row.title, state: row.line })
         return
     end if
@@ -107,8 +107,8 @@ sub showButton()
     end if
     if FormatJson(m.buttons.buttons) <> FormatJson(labels) then m.buttons.buttons = labels
     m.line.text = button.line
-    m.line.color = "0xA1A9B6FF"
-    if ticked > 0 and button.label = "" then m.line.color = "0xEB6B70FF"
+    m.line.color = uiTint("0xA1A9B6FF")
+    if ticked > 0 and button.label = "" then m.line.color = uiTint("0xEB6B70FF")
 end sub
 
 sub onButton(event as object)
@@ -143,7 +143,7 @@ sub onSent(event as object)
     if not answer.ok
         if uiFailed(answer) then return
         m.line.text = reqAskProblem(answer, m.allowanceShown, "show", CreateObject("roDateTime").AsSeconds())
-        m.line.color = "0xEB6B70FF"
+        m.line.color = uiTint("0xEB6B70FF")
         return
     end if
     uiNavigate({ back: true, message: { title: title, lines: [reqAsked(answer.status, answer.data, title)] } })

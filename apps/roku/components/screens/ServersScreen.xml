@@ -19,6 +19,7 @@
     <script type="text/brightscript" uri="pkg:/components/lib/Nav.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Nodes.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Servers.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <Label id="title" translation="[96, 72]" color="0xEBEBEBFF" font="font:ExtraLargeBoldSystemFont" />
         <Label id="wordmark" translation="[1524, 72]" width="300" horizAlign="right" text="Pley" color="0x38BDF8FF" font="font:ExtraLargeBoldSystemFont" />

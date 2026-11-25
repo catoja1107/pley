@@ -1,4 +1,10 @@
 sub init()
+    ' The look shown (Theme.brs): the one shown last until the account is
+    ' heard, so nothing flashes at a start. What it makes of the colors the
+    ' screens are written in is everyone's (Colors.brs).
+    m.looks = CreateObject("roRegistrySection", "appearance")
+    look = themeLook(m.looks.Read("theme"), m.looks.Read("accent"))
+    m.global.addFields({ look: look, tints: themeTints(look), playerTints: themeTints(themePlayerLook(look)) })
     m.top.backgroundUri = ""
     m.top.backgroundColor = uiColors().bg
     m.top.palette = uiPalette()
@@ -24,6 +30,10 @@ sub init()
     end for
     m.top.observeField("languageChoice", "onLanguageChoice")
     m.top.observeField("languageRefused", "onLanguageFacts")
+    for each fact in ["accountHeard", "accountTheme", "accountAccent"]
+        session.observeField(fact, "onLookFacts")
+    end for
+    m.top.observeField("lookChoice", "onLookChoice")
     onAgentChanged()
 
     m.api = CreateObject("roSGNode", "ApiTask")
@@ -102,6 +112,9 @@ sub init()
     m.noticeFocus = invalid
     m.noticeCard = m.top.findNode("notice")
     m.noticeCard.observeField("event", "onNoticeEvent")
+    ' Made before the look was known.
+    uiRecolor(m.rail)
+    uiRecolor(m.noticeCard)
     m.announced = invalid
     ' A notice waits for the remote to rest, looked at four times a second
     ' while one waits: when a look last found a key within the second
@@ -142,6 +155,7 @@ sub onBoot(event as object)
     answer = event.getData()
     m.booted = true
     onLanguageFacts()
+    onLookFacts()
     screen = "servers"
     if answer.ok then screen = answer.data.screen
     if screen = "link" then m.top.signalBeacon("AppDialogInitiate")
@@ -1026,13 +1040,109 @@ sub onLanguageChoice()
     onLanguageFacts()
 end sub
 
-' Whether a screen shows another language than the one shown now, and is
-' made again for it. One that draws its words again itself is made again
-' only for another family of type (Chinese's), its fonts being its own.
+' --- The look ---
+
+' Something that picks the theme changed (the account's, heard or not):
+' the screens show its look, and the registry keeps the choice for the next
+' start.
+sub onLookFacts()
+    if not m.booted then return
+    session = m.global.session
+    choice = themeChosen({ accountHeard: session.accountHeard, accountTheme: session.accountTheme, accountAccent: session.accountAccent, keptTheme: m.looks.Read("theme"), keptAccent: m.looks.Read("accent") })
+    keepLook(choice)
+    showLook(themeLook(choice.theme, choice.accent))
+end sub
+
+' A theme and accent picked on this Roku ({ theme, accent }), in Settings
+' on a server that keeps none (an older Pley).
+sub onLookChoice()
+    choice = m.top.lookChoice
+    if choice = invalid then return
+    keepLook({ theme: httpString(choice.theme), accent: httpString(choice.accent) })
+    onLookFacts()
+end sub
+
+sub keepLook(choice as object)
+    if m.looks.Read("theme") = choice.theme and m.looks.Read("accent") = choice.accent then return
+    m.looks.Write("theme", choice.theme)
+    m.looks.Write("accent", choice.accent)
+    m.looks.Flush()
+end sub
+
+' Another look: what it makes of the colors written, for what is made from
+' now on, the scene's own colors, the rail and the ready-to-watch card made
+' again, and the screens, as for another language (stale): the one on top
+' at once, those under it as they show again. The players play on in
+' theirs.
+sub showLook(look as string)
+    if look = m.global.look then return
+    m.global.tints = themeTints(look)
+    m.global.playerTints = themeTints(themePlayerLook(look))
+    m.global.look = look
+    m.uiTintSets = invalid
+    m.top.backgroundColor = uiColors().bg
+    m.top.palette = uiPalette()
+    remakeRail()
+    remakeNotice()
+    if m.stack.Count() > 0 and stale(m.stack.Peek())
+        renew(m.stack.Count() - 1)
+        placeRail()
+    end if
+    showNotice()
+end sub
+
+' The rail made again where it was, its entries asked anew.
+sub remakeRail()
+    old = m.rail
+    old.unobserveField("chosen")
+    old.unobserveField("leave")
+    rail = CreateObject("roSGNode", "Rail")
+    rail.id = "rail"
+    rail.visible = false
+    m.top.replaceChild(rail, childIndex(old))
+    uiRecolor(rail)
+    rail.observeField("chosen", "onRailChosen")
+    rail.observeField("leave", "onRailLeave")
+    m.rail = rail
+    m.railShown = ""
+    buildRail()
+    placeRail()
+end sub
+
+' The ready-to-watch card made again; a notice it showed waits to show
+' again in it.
+sub remakeNotice()
+    coverNotice()
+    old = m.noticeCard
+    old.unobserveField("event")
+    card = CreateObject("roSGNode", "RequestNotice")
+    card.id = "notice"
+    card.translation = old.translation
+    card.visible = false
+    m.top.replaceChild(card, childIndex(old))
+    card.observeField("event", "onNoticeEvent")
+    m.noticeCard = card
+end sub
+
+' Where node is among the scene's children.
+function childIndex(node as object) as integer
+    children = m.top.getChildren(-1, 0)
+    for i = 0 to children.Count() - 1
+        if children[i].isSameNode(node) then return i
+    end for
+    return -1
+end function
+
+' Whether a screen shows another look or language than the one shown now,
+' and is made again for it. One that draws its words again itself is made
+' again for a language only for another family of type (Chinese's), its
+' fonts being its own. The players keep the look they started in.
 function stale(screen as object) as boolean
-    if screen.hasField("language") then return i18nFontFamily(screen.madeIn) <> uiFontFamily()
     kind = screen.subtype()
-    if kind = "PlayerScreen" or kind = "LivePlayerScreen" or kind = "NowPlayingScreen" then return false
+    player = kind = "PlayerScreen" or kind = "LivePlayerScreen"
+    if not player and screen.madeLook <> m.global.look then return true
+    if screen.hasField("language") then return i18nFontFamily(screen.madeIn) <> uiFontFamily()
+    if player or kind = "NowPlayingScreen" then return false
     return screen.madeIn <> m.global.language
 end function
 
@@ -1102,14 +1212,18 @@ sub show(nav as object)
     showNotice()
 end sub
 
-' A screen of the stack, in the language shown (madeIn).
+' A screen of the stack, in the language and look shown (madeIn, madeLook).
 function makeScreen(name as string, route as string, params as object) as object
     screen = CreateObject("roSGNode", name)
-    ' Pley's type wherever the screen still has the Roku's (Type.brs).
+    ' Pley's type wherever the screen still has the Roku's (Type.brs), and
+    ' the look's colors (Colors.brs), the players' theirs.
     uiRestyle(screen)
+    tints = m.global.tints
+    if name = "PlayerScreen" or name = "LivePlayerScreen" then tints = m.global.playerTints
+    if tints.Count() > 0 then uiRecolorWith(screen, tints)
     screen.route = route
     screen.params = params
-    screen.addFields({ madeIn: m.global.language })
+    screen.addFields({ madeIn: m.global.language, madeLook: m.global.look })
     if screen.hasField("requestSummary") then screen.requestSummary = m.top.requestSummary
     screen.observeField("navigate", "onNavigate")
     return screen

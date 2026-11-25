@@ -50,8 +50,8 @@
              what it covers isn't drawn (onPanel). -->
         <Group id="under">
         <Backdrop id="backdrop" />
-        <Poster id="scrim" width="1600" height="1080" uri="pkg:/images/ui/scrim-left.png" />
-        <Poster id="fade" translation="[0, 540]" width="1920" height="540" uri="pkg:/images/ui/fade-down.png" />
+        <Poster id="scrim" width="1600" height="1080" uri="pkg:/images/ui/scrim-left.png" blendColor="0x16191EFF" />
+        <Poster id="fade" translation="[0, 540]" width="1920" height="540" uri="pkg:/images/ui/fade-down.png" blendColor="0x16191EFF" />
         <Group id="page">
             <!-- Only for a title without a backdrop. -->
             <Poster id="poster" translation="[1404, 120]" width="420" height="630" loadWidth="420" loadHeight="630" loadDisplayMode="scaleToZoom" visible="false" />

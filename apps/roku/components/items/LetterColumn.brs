@@ -7,6 +7,7 @@ sub init()
     ' Pley's type where the markup names Roku's (a list's items are made
     ' after the scene restyled the screen).
     uiRestyle(m.top)
+    uiRecolor(m.top)
 end sub
 
 ' A label a letter, 30 pixels apart.
@@ -54,21 +55,21 @@ sub onLook()
     for i = 0 to m.labels.Count() - 1
         label = m.labels[i]
         if i = marked and focused
-            label.color = "0x16191EFF"
+            label.color = uiTint("0x16191EFF")
         else if i = marked
-            label.color = "0xEBEBEBFF"
+            label.color = uiTint("0xEBEBEBFF")
         else if i < has.Count() and has[i] = true
-            label.color = "0xA1A9B6FF"
+            label.color = uiTint("0xA1A9B6FF")
         else
-            label.color = "0x4B5261FF"
+            label.color = uiTint("0x4B5261FF")
         end if
     end for
     m.mark.translation = [0, marked * rowHeight()]
     m.mark.visible = marked >= 0 and marked < m.labels.Count()
     if focused
-        m.mark.color = "0x38BDF8FF"
+        m.mark.color = uiTint("0x38BDF8FF")
     else
-        m.mark.color = "0x2E3440FF"
+        m.mark.color = uiTint("0x2E3440FF")
     end if
 end sub
 

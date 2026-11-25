@@ -58,6 +58,11 @@
              Language row is this Roku's while it is the one in use, though
              Settings closes. -->
         <field id="languageRefused" type="string" />
+        <!-- A theme and accent picked on this Roku ({ theme, accent },
+             accent "" for the theme's own), in Settings on a server that
+             keeps no account's: the scene keeps it in the registry and
+             shows its look. -->
+        <field id="lookChoice" type="assocarray" alwaysNotify="true" />
         <!-- Home's libraries and whether the server has Live TV, as it loads
              them: the rail's entries. -->
         <field id="railLibraries" type="array" />
@@ -82,6 +87,8 @@
     <script type="text/brightscript" uri="pkg:/components/lib/Pages.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Nodes.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Home.brs" />
+    <script type="text/brightscript" uri="pkg:/components/lib/Theme.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <Group id="screens" />
         <!-- The rail at the left of the browsing pages (Rail.xml). -->

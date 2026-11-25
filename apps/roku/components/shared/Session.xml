@@ -35,5 +35,11 @@
         <field id="accountHeard" type="boolean" />
         <field id="serverLanguage" type="string" />
         <field id="serverHeard" type="boolean" />
+        <!-- The account's theme and accent (GET /api/auth/me's theme and
+             accent), once accountHeard: "" for a Pley from before themes,
+             which keeps none, and an accent "" for the theme's own. The
+             scene shows their look (Theme.brs's themeChosen). -->
+        <field id="accountTheme" type="string" />
+        <field id="accountAccent" type="string" />
     </interface>
 </component>

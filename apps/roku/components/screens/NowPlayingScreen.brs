@@ -248,10 +248,10 @@ sub showStatus()
     music = m.global.music
     if m.noticing
         m.message.text = t("player.sleep.pausingIn", { seconds: music.sleep.secondsLeft })
-        m.message.color = "0xA1A9B6FF"
+        m.message.color = uiTint("0xA1A9B6FF")
     else
         m.message.text = music.message
-        m.message.color = "0xEB6B70FF"
+        m.message.color = uiTint("0xEB6B70FF")
     end if
 end sub
 

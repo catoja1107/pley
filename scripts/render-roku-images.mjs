@@ -5,9 +5,11 @@
 // controls are made of. Sizes are the Android TV app's dp doubled, as a
 // Roku's 1080-line screen is twice its 540.
 //
-// Most pictures are white, for the screens to tint (a Poster's
-// blendColor). Nine-patch pictures (.9.png) carry Roku's one-pixel border:
-// black on the top and left edges marks what stretches.
+// The pictures are white, for the screens to tint in the look shown (a
+// Poster's blendColor, components/shared/Colors.brs), but for the black of
+// the players' scrims and the open rail's shadow. Nine-patch pictures
+// (.9.png) carry Roku's one-pixel border: black on the top and left edges
+// marks what stretches.
 //
 //   bun scripts/render-roku-images.mjs
 
@@ -19,11 +21,6 @@ import { renderer } from "./svg-render.mjs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const out = join(root, "apps/roku/images/ui");
 
-// Pley's colors (apps/roku/components/shared/Ui.brs, Android's PleyColors.kt).
-const FG = "#ebebeb";
-const ACCENT = "#38bdf8";
-const ACCENT_BRIGHT = "#7dd3fc";
-const BG = "#16191e";
 
 /** Lucide's icons as the Android app has them: name → { filled, paths }. */
 function lucide() {
@@ -38,6 +35,11 @@ function lucide() {
 const ICONS = lucide();
 // The player's sleep timer, as the Android TV player has it (TvPlayerExtras.kt).
 ICONS.moon ??= { filled: false, paths: ["M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"] };
+// Settings' Appearance and its accent.
+ICONS.palette ??= {
+  filled: false,
+  paths: ["M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z", "M13.5 6.5h.01", "M17.5 10.5h.01", "M6.5 12.5h.01", "M8.5 7.5h.01"],
+};
 
 /** Icon [name], [size] px, in [color], with its top left at (x, y), as SVG elements. */
 function icon(name, size, color, x = 0, y = 0) {
@@ -77,7 +79,7 @@ const ICONS_40 = [
   "star", "chevron-right", "chevron-left", "arrow-up-narrow-wide", "arrow-down-wide-narrow", "sliders-horizontal",
   "skip-forward", "skip-back", "x", "clock", "calendar-days", "user-round", "users", "image", "library-big",
   "tv-minimal", "arrow-right", "arrow-up-down", "globe", "history", "activity", "log-out", "server", "plus", "pencil", "square",
-  "app-window", "arrow-left",
+  "app-window", "arrow-left", "sun", "palette",
 ];
 for (const name of ICONS_40) add(`icon-${name}-40.png`, 40, 40, icon(name, 40, "#ffffff"));
 for (const name of ["skip-back", "skip-forward"]) add(`icon-${name}-48.png`, 48, 48, icon(name, 48, "#ffffff"));
@@ -95,26 +97,19 @@ ninePatch("bar.9.png", 16, 8, 4, box(16, 8, 4, "#ffffff"));
 // buttons and the player's own controls keep their round corners.
 ninePatch("panel.9.png", 80, 80, 32, `<rect width="80" height="80" fill="#ffffff"/>`);
 ninePatch("square.9.png", 16, 16, 4, `<rect width="16" height="16" fill="#ffffff"/>`);
-// The guide's focus (TimeGrid takes a picture, not a colour): the accent.
-ninePatch("square-accent.9.png", 16, 16, 4, `<rect width="16" height="16" fill="${ACCENT}"/>`);
 
 // The edge of the seek preview: 2 px, corners 8, white for fg at 20 %.
 ninePatch("frame.9.png", 32, 32, 8, `<rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="#ffffff" stroke-width="2"/>`);
 
-// The scrubber's thumb: 20 px in fg; focused, 24 px with an accent-bright
-// ring 4 px out, 4 px wide (36 across).
+// The scrubber's thumb: 20 px in fg; focused, 24 px (circle.png) with an
+// accent-bright ring 4 px out, 4 px wide (36 across).
 add("thumb.png", 20, 20, `<circle cx="10" cy="10" r="10" fill="#ffffff"/>`);
-add("thumb-focus.png", 36, 36, `<circle cx="18" cy="18" r="12" fill="${FG}"/><circle cx="18" cy="18" r="16" fill="none" stroke="${ACCENT_BRIGHT}" stroke-width="4"/>`);
+add("thumb-focus.png", 36, 36, `<circle cx="18" cy="18" r="16" fill="none" stroke="#ffffff" stroke-width="4"/>`);
 
-// Buffering: an 80 px ring, 4 px in fg, with a quarter in the accent, which
-// the player turns.
-add(
-  "buffering.png",
-  80,
-  80,
-  `<circle cx="40" cy="40" r="38" fill="none" stroke="${FG}" stroke-width="4"/>` +
-    `<path d="M40 2A38 38 0 0 1 78 40" fill="none" stroke="${ACCENT}" stroke-width="4" stroke-linecap="round"/>`,
-);
+// Buffering: an 80 px ring, 4 px in fg, with a quarter in the accent over
+// it, which the player turns.
+add("buffering.png", 80, 80, `<circle cx="40" cy="40" r="38" fill="none" stroke="#ffffff" stroke-width="4"/>`);
+add("buffering-arc.png", 80, 80, `<path d="M40 2A38 38 0 0 1 78 40" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>`);
 
 // The scrim behind the player's controls, stretched over the screen: black
 // at 65 % at the top behind the title, 25 % through the middle, 70 % and
@@ -142,40 +137,35 @@ add(
 // tile's 8 px; nine-patch, its corners left whole. Android TV's stands 3 dp
 // off the tile, a gap that on a Roku's grown tiles read as loose and
 // reached the next tile.
-ninePatch("ring.9.png", 64, 64, 22, `<rect x="3" y="3" width="58" height="58" rx="11" fill="none" stroke="${ACCENT_BRIGHT}" stroke-width="6"/>`);
+ninePatch("ring.9.png", 64, 64, 22, `<rect x="3" y="3" width="58" height="58" rx="11" fill="none" stroke="#ffffff" stroke-width="6"/>`);
 // The same ring around a person's circle, as wide as a row's (192 px and
 // 6 px each side).
-add("ring-round.png", 204, 204, `<circle cx="102" cy="102" r="99" fill="none" stroke="${ACCENT_BRIGHT}" stroke-width="6"/>`);
+add("ring-round.png", 204, 204, `<circle cx="102" cy="102" r="99" fill="none" stroke="#ffffff" stroke-width="6"/>`);
 // A profile's face in "Who's watching?" (220 px, to tint), and its focus
 // ring, the same stroke 12 px out all round.
 add("face.png", 220, 220, `<circle cx="110" cy="110" r="110" fill="#ffffff"/>`);
-add("ring-face.png", 244, 244, `<circle cx="122" cy="122" r="119" fill="none" stroke="${ACCENT_BRIGHT}" stroke-width="6"/>`);
+add("ring-face.png", 244, 244, `<circle cx="122" cy="122" r="119" fill="none" stroke="#ffffff" stroke-width="6"/>`);
 
 // The line along a tile's inner edge (white at 6 %), corners 8.
 ninePatch("hairline.9.png", 32, 32, 10, `<rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>`);
 
-// The watched tick: bg at 80 %, corners 4, an accent check.
-add(
-  "tick.png",
-  40,
-  40,
-  box(40, 40, 4, "rgba(22,25,30,0.8)") + `<path d="M28 14 17 25l-5-5" fill="none" stroke="${ACCENT}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`,
-);
+// The watched tick's check, in the accent over bg at 80 % (r4.9.png).
+add("tick.png", 40, 40, `<path d="M28 14 17 25l-5-5" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`);
 
-// The backdrop's scrims, in the app's background: from the left (100 % at
+// The backdrop's scrims, for the app's background: from the left (100 % at
 // 0, 92 % at 600 px, 85 % at 1120, nothing at 1600 of the screen), and from
 // clear to solid downwards, stretched as each page needs.
 add(
   "scrim-left.png",
   800,
   4,
-  `<defs><linearGradient id="g">${stops([[0, 1], [0.375, 0.92], [0.7, 0.85], [1, 0]], BG)}</linearGradient></defs><rect width="800" height="4" fill="url(#g)"/>`,
+  `<defs><linearGradient id="g">${stops([[0, 1], [0.375, 0.92], [0.7, 0.85], [1, 0]], "#ffffff")}</linearGradient></defs><rect width="800" height="4" fill="url(#g)"/>`,
 );
 add(
   "fade-down.png",
   4,
   256,
-  `<defs><linearGradient id="g" x2="0" y2="1">${stops([[0, 0], [1, 1]], BG)}</linearGradient></defs><rect width="4" height="256" fill="url(#g)"/>`,
+  `<defs><linearGradient id="g" x2="0" y2="1">${stops([[0, 0], [1, 1]], "#ffffff")}</linearGradient></defs><rect width="4" height="256" fill="url(#g)"/>`,
 );
 
 // A pill's edge (TvPillButton, TvRoundButton at rest): 2 px, corners 12,
@@ -193,14 +183,14 @@ add("edge-round.png", 72, 72, `<circle cx="36" cy="36" r="35" fill="none" stroke
 // A settings switch's track (TvSwitch), tinted by the row.
 add("switch.png", 80, 44, box(80, 44, 22, "#ffffff"));
 
-// The page's dark under the rail's collapsed icons, as Android TV's
+// The page's dark under the rail's collapsed icons (for the background), as Android TV's
 // (RailFadeSolidUntil, RailFadeClearFrom): the background at 90 % to
 // 88 px, thinning to nothing at 184, short of the pages' 192 px gutter.
 add(
   "fade-left.png",
   64,
   4,
-  `<defs><linearGradient id="g">${stops([[0, 0.9], [0.48, 0.9], [1, 0]], BG)}</linearGradient></defs><rect width="64" height="4" fill="url(#g)"/>`,
+  `<defs><linearGradient id="g">${stops([[0, 0.9], [0.48, 0.9], [1, 0]], "#ffffff")}</linearGradient></defs><rect width="64" height="4" fill="url(#g)"/>`,
 );
 
 // The open rail's shadow on the page: black at 45 % to nothing.

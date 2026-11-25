@@ -16,7 +16,10 @@
 ' household has more than one profile. Language is the account's on a
 ' server that keeps one (PUT /api/me/language), else this Roku's, as the
 ' globe picks it (I18n.brs's i18nRow); a new one draws the screen again in
-' it, the focus on its row.
+' it, the focus on its row. Appearance's theme and accent are the
+' account's too (PUT /api/me/appearance), else this Roku's (Theme.brs's
+' themeChosen); a new look makes the screen again in it, on Appearance's
+' row (its params).
 
 sub init()
     m.titleLabel = m.top.findNode("title")
@@ -39,8 +42,10 @@ sub init()
     m.lastFocus = m.categories
     m.dialog = invalid
     ' The categories, top to bottom, and the one whose rows show.
-    m.categoryKeys = ["profile", "playback", "server", "diagnostics", "about", "signOut"]
+    m.categoryKeys = ["profile", "appearance", "playback", "server", "diagnostics", "about", "signOut"]
     m.category = "profile"
+    ' Whether the place its params name was taken back (restorePlace).
+    m.placed = false
     ' The profile signed in as GET /api/auth/me has it, invalid until it
     ' answered.
     m.me = invalid
@@ -50,9 +55,10 @@ sub init()
     m.defaults = invalid
     m.refused = false
     m.saving = 0
-    ' Each language picked counts: an answer to one before the last
-    ' changes nothing the last did.
+    ' Each language or look picked counts: an answer to one before the
+    ' last changes nothing the last did.
     m.languagePicks = 0
+    m.lookPicks = 0
     ' What the message at the top right says ({ key, values, text }), drawn
     ' again in a new language.
     m.words = { key: "", values: invalid, text: "" }
@@ -106,7 +112,7 @@ sub relabel()
 end sub
 
 sub showCategories()
-    icons = { profile: "user-round", playback: "play", server: "server", diagnostics: "activity", about: "info", signOut: "log-out" }
+    icons = { profile: "user-round", appearance: "palette", playback: "play", server: "server", diagnostics: "activity", about: "info", signOut: "log-out" }
     items = []
     for each key in m.categoryKeys
         label = t("settings.rows.signOut")
@@ -138,6 +144,30 @@ sub onActive()
     end if
     uiGet("/api/auth/me", "onMe")
     if authAllows(m.global.session.scope, "profiles") then uiGet("/api/oauth/profiles", "onHousehold")
+    if not m.placed
+        m.placed = true
+        restorePlace()
+    end if
+end sub
+
+' Made again in another look, as its params say ({ category, row }): the
+' focus back on the row chosen.
+sub restorePlace()
+    params = m.top.params
+    if params = invalid then return
+    category = httpString(params.category)
+    for i = 0 to m.categoryKeys.Count() - 1
+        if m.categoryKeys[i] = category and category <> ""
+            m.categories.jumpToItem = i
+            m.category = category
+            selectPane()
+            enterRows()
+            actions = m.actions[category]
+            for j = 0 to actions.Count() - 1
+                if actions[j] = httpString(params.row) then m.rows.jumpToItem = j
+            end for
+        end if
+    end for
 end sub
 
 sub onHousehold(event as object)
@@ -181,7 +211,11 @@ sub showHeader()
     name = httpSentence(m.me.name)
     m.nameLabel.text = name
     m.initial.text = UCase(Left(name, 1))
-    m.face.blendColor = profColor(m.me.avatar_color)
+    ' A profile without a color of its own has the raised surface's, in
+    ' the look shown.
+    face = profColor(m.me.avatar_color)
+    if httpString(m.me.avatar_color) = "" then face = uiTint(face)
+    m.face.blendColor = face
     m.picture.uri = urlImage(session.server, m.me.avatar_url, 96)
 end sub
 
@@ -270,6 +304,9 @@ sub fillPane(category as string)
         ' Roku has no QR code of its own: the address, and OK says what
         ' is managed there.
         rows.Push(settingRow("web", t("settings.web"), webAddress(), "app-window"))
+    else if category = "appearance"
+        rows.Push(settingRow("theme", t("settings.appearance.theme"), themeLabel(chosenLook().theme), "sun"))
+        rows.Push(settingRow("accent", t("settings.appearance.accent"), accentLabel(chosenLook()), "palette"))
     else if category = "playback"
         ' This Roku's, kept on it: no server needed.
         rows.Push(settingRow("quality", t("settings.quality"), aqLabel(aqChoice(playbackSection())), "gauge"))
@@ -346,6 +383,10 @@ sub onRow(event as object)
     end if
     if chosen = "language"
         openLanguages()
+        return
+    end if
+    if chosen = "theme" or chosen = "accent"
+        openLook(chosen)
         return
     end if
     if chosen = "history"
@@ -461,7 +502,10 @@ sub showChoices(kind as string, choice as object)
     m.choice = choice
     items = []
     for i = 0 to m.choice.labels.Count() - 1
-        items.Push({ title: m.choice.labels[i], checked: i = m.choice.current })
+        item = { title: m.choice.labels[i], checked: i = m.choice.current }
+        ' An accent's color beside its name (PanelRow).
+        if m.choice.swatches <> invalid then item.swatch = m.choice.swatches[i]
+        items.Push(item)
     end for
     m.panelTitle.text = m.choice.title
     m.choices.content = nodesContent(items)
@@ -513,6 +557,12 @@ sub onChoice(event as object)
     end if
     if m.choiceKind = "language"
         chooseLanguage(m.choice.values[at])
+        return
+    end if
+    if m.choiceKind = "theme" or m.choiceKind = "accent"
+        chosen = chosenLook()
+        chosen[m.choiceKind] = m.choice.values[at]
+        chooseLook(chosen.theme, chosen.accent)
         return
     end if
     saveDefaults(tracksWith(m.defaults, m.choiceKind, m.choice.values[at]))
@@ -628,6 +678,111 @@ sub onLanguageSaved(event as object)
     spec = event.getRoSGNode().spec
     if answer.status = 400 and spec.language <> ""
         sayText(t("settings.language.tooOld", { language: i18nName(spec.language) }))
+        return
+    end if
+    if not uiFailed(answer) then sayText(answer.message)
+end sub
+
+' --- The look ---
+
+' The theme and accent chosen ({ theme, accent }, "" for the theme's own),
+' as the scene shows them.
+function chosenLook() as object
+    session = m.global.session
+    kept = CreateObject("roRegistrySection", "appearance")
+    return themeChosen({ accountHeard: session.accountHeard, accountTheme: session.accountTheme, accountAccent: session.accountAccent, keptTheme: kept.Read("theme"), keptAccent: kept.Read("accent") })
+end function
+
+' A theme's name; System's is Automatic, naming what it is on a Roku.
+function themeLabel(theme as string) as string
+    if theme = "system" then return t("settings.appearance.automatic", { theme: t("settings.appearance.themes.dark") })
+    return t("settings.appearance.themes." + themeShown(theme))
+end function
+
+' An accent's name; none is the theme's own, named.
+function accentLabel(chosen as object) as string
+    shown = themeAccentShown(chosen.theme, chosen.accent)
+    if shown <> chosen.accent then return t("settings.appearance.themeAccent", { accent: t("settings.appearance.accents." + shown) })
+    return t("settings.appearance.accents." + shown)
+end function
+
+' The themes, or the accents each with its color as the theme shows it,
+' the one chosen checked.
+sub openLook(kind as string)
+    if m.me = invalid
+        ' Whether the server keeps an account's comes with the profile.
+        say("settings.loadingProfile")
+        uiGet("/api/auth/me", "onMe")
+        return
+    end if
+    say("")
+    chosen = chosenLook()
+    choice = { title: t("settings.appearance." + kind), labels: [], values: [], hints: [], current: 0 }
+    if kind = "theme"
+        ' One the Roku doesn't know is shown as Dark.
+        current = chosen.theme
+        if current <> "system" then current = themeShown(current)
+        for each theme in themeIds()
+            if theme = current then choice.current = choice.values.Count()
+            choice.values.Push(theme)
+            choice.labels.Push(themeLabel(theme))
+            hint = ""
+            if theme = "system" then hint = t("settings.appearance.automaticHint")
+            choice.hints.Push(hint)
+        end for
+    else
+        choice.swatches = []
+        theme = themeShown(chosen.theme)
+        accents = [""]
+        accents.Append(themeAccents())
+        for each accent in accents
+            if accent = chosen.accent then choice.current = choice.values.Count()
+            choice.values.Push(accent)
+            choice.labels.Push(accentLabel({ theme: chosen.theme, accent: accent }))
+            choice.swatches.Push("0x" + themePalette(theme + "/" + themeAccentShown(theme, accent)).accent + "FF")
+            hint = ""
+            if accent = "" then hint = t("settings.appearance.themeAccentHint")
+            choice.hints.Push(hint)
+        end for
+    end if
+    showChoices(kind, choice)
+end sub
+
+' A look chosen: the account's on a server that keeps one, shown once the
+' server has it (the API task hears it in the answer, and the scene makes
+' this screen again in it, on this row); else this Roku's, at once.
+sub chooseLook(theme as string, accent as string)
+    m.lookPicks = m.lookPicks + 1
+    m.top.params = { category: "appearance", row: m.choiceKind }
+    if m.me <> invalid and not m.me.DoesExist("theme")
+        m.top.getScene().lookChoice = { theme: theme, accent: accent }
+        showPane()
+        return
+    end if
+    ' Ids only (themeIds, themeAccents), so written as they are.
+    body = "{""theme"":""" + theme + """,""accent"":null}"
+    if accent <> "" then body = "{""theme"":""" + theme + """,""accent"":""" + accent + """}"
+    spec = { method: "PUT", path: "/api/me/appearance", jsonText: body, profile: true, theme: theme, accent: accent, pick: m.lookPicks }
+    uiRequest(spec, "onLookSaved")
+end sub
+
+' A Pley from before themes has no such route (404, or 405): the look is
+' this Roku's, unless another was picked since. One from before a theme or
+' accent refuses it (400): the server wants updating.
+sub onLookSaved(event as object)
+    answer = event.getData()
+    if answer.ok
+        showPane()
+        return
+    end if
+    spec = event.getRoSGNode().spec
+    if answer.status = 404 or answer.status = 405
+        if spec.pick = m.lookPicks then m.top.getScene().lookChoice = { theme: spec.theme, accent: spec.accent }
+        showPane()
+        return
+    end if
+    if answer.status = 400
+        say("settings.appearance.tooOld")
         return
     end if
     if not uiFailed(answer) then sayText(answer.message)

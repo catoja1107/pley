@@ -2,6 +2,7 @@
   "title": "设置",
   "categories": {
     "profile": "配置文件",
+    "appearance": "外观",
     "playback": "播放",
     "server": "服务器",
     "diagnostics": "诊断",
@@ -24,6 +25,30 @@
     "title": "语言",
     "automatic": "自动（{{language}}）",
     "tooOld": "请在服务器上更新 Pley，以便为帐户保存{{language}}。"
+  },
+  "appearance": {
+    "theme": "主题",
+    "accent": "强调色",
+    "automatic": "自动（{{theme}}）",
+    "automaticHint": "手机和电脑上随设备设置为浅色或深色，电视上为深色。",
+    "themeAccent": "随主题（{{accent}}）",
+    "themeAccentHint": "与主题搭配的颜色。",
+    "tooOld": "请在服务器上更新 Pley，以便使用此外观。",
+    "themes": {
+      "dark": "深色",
+      "light": "浅色",
+      "midnight": "午夜",
+      "obsidian": "黑曜石",
+      "arctic": "极地"
+    },
+    "accents": {
+      "sky": "天蓝",
+      "blue": "蓝色",
+      "emerald": "翠绿",
+      "teal": "青色",
+      "amber": "琥珀",
+      "violet": "紫罗兰"
+    }
   },
   "quality": "画质",
   "autoplay": "自动播放下一集",

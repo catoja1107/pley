@@ -487,7 +487,7 @@ export function startFixture({ accessSeconds = 3600, refuse = [] } = {}) {
       res.writeHead(answered.status, { "Content-Type": "application/json", "Cache-Control": "no-store", ...answered.headers });
       return res.end(JSON.stringify(answered.body));
     }
-    const me = () => ({ id: 1, username: "anna", name: "Anna", ...fixture.trackDefaults, language: fixture.language });
+    const me = () => ({ id: 1, username: "anna", name: "Anna", ...fixture.trackDefaults, language: fixture.language, ...fixture.look });
     if (path === "/api/auth/me") return json(200, me());
     // The account's language (docs/API.md, "Language"): one of the five,
     // or null for Automatic.
@@ -501,6 +501,21 @@ export function startFixture({ accessSeconds = 3600, refuse = [] } = {}) {
       fixture.languagesSaved.push(asked.language);
       if (asked.language !== null && !["en", "fr", "es", "zh-CN", "zh-TW"].includes(asked.language)) return json(400, { code: "bad_request", message: "no such language" });
       fixture.language = asked.language;
+      return json(200, me());
+    }
+    // The account's theme and accent (docs/API.md, "Appearance"): both at
+    // once, null for the default.
+    if (path === "/api/me/appearance" && req.method === "PUT") {
+      const asked = JSON.parse(body);
+      fixture.looksSaved.push(asked);
+      const keys = Object.keys(asked).sort().join();
+      if (keys !== "accent,theme") problems.push(`appearance with ${keys}`);
+      const themes = ["system", "dark", "light", "midnight", "obsidian", "arctic"];
+      const accents = ["sky", "blue", "emerald", "teal", "amber", "violet"];
+      if ((asked.theme !== null && !themes.includes(asked.theme)) || (asked.accent !== null && !accents.includes(asked.accent))) {
+        return json(400, { code: "bad_request", message: "no such theme or accent" });
+      }
+      fixture.look = { theme: asked.theme ?? "dark", accent: asked.accent };
       return json(200, me());
     }
     // The profile's track defaults (docs/API.md): all three at once.
@@ -978,7 +993,7 @@ export function startFixture({ accessSeconds = 3600, refuse = [] } = {}) {
     return json(404, { code: "not_found", message: `nothing at ${path}` });
   });
 
-  const fixture = { issuer: "", down: false, qr: true, proofs: 0, requestScopes: true, requestsOn: true, twoStep: false, scopesAsked: [], playbackDelayMs: 0, refreshes: 0, playbacks: [], libraryOrder: [1, 2, 3], orders: [], trackDefaults: { audio_language: null, subtitle_language: null, subtitle_mode: "forced" }, trackDefaultsSaved: [], serverLanguage: "en", language: null, languagesSaved: [], languageRoute: true, languagesRefused: [], categories: true, streams: [], picks: new Map(), ratings: [], myList: [1003], marks: [], playlistEntries: [[1, 1000], [2, 101], [3, 102]], playlistRemoved: [], playlistOrders: [], playlistsAsked: [], playlistsMade: [], smartPlaylists: [], nextPlaylist: 2,
+  const fixture = { issuer: "", down: false, qr: true, proofs: 0, requestScopes: true, requestsOn: true, twoStep: false, scopesAsked: [], playbackDelayMs: 0, refreshes: 0, playbacks: [], libraryOrder: [1, 2, 3], orders: [], trackDefaults: { audio_language: null, subtitle_language: null, subtitle_mode: "forced" }, trackDefaultsSaved: [], serverLanguage: "en", language: null, languagesSaved: [], languageRoute: true, languagesRefused: [], look: { theme: "dark", accent: null }, looksSaved: [], categories: true, streams: [], picks: new Map(), ratings: [], myList: [1003], marks: [], playlistEntries: [[1, 1000], [2, 101], [3, 102]], playlistRemoved: [], playlistOrders: [], playlistsAsked: [], playlistsMade: [], smartPlaylists: [], nextPlaylist: 2,
     household: [{ id: 1, name: "Anna", avatar_url: null, avatar_color: "#38bdf8", current: true, needs: "none" }, { id: 2, name: "Ben", avatar_url: null, avatar_color: "#f472b6", current: false, needs: "none" }],
     switched: [], subtitlesAdded: [], picturesMissing: false, picturesAsked: [], picturesFetched: [], probed: false, networkTold: [], speedTests: [], requestsAsked: [], requestsActed: [], discoverPictures: [], problems, requests, progress, videoReports: 0, closed, close: () => server.close(),
     liveRecent: [2], liveBrowses: [], liveFavorites: [], liveFavoriteChanges: [], liveGuides: [], liveWatches: [], liveSessions: new Map(), livePlaylists: [], liveLeft: [] };

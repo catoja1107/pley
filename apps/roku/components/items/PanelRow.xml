@@ -6,7 +6,9 @@
      Focused, it fills with the accent itself (square), the words and the
      check dark on it: at once, where a list's sliding focus lagged, and
      with room either side of the words. As wide and tall as the list's
-     items (608 × 88 in the player's panels). -->
+     items (608 × 88 in the player's panels). An accent's row shows its
+     color in a circle before its words (its content's swatch), ringed so
+     it shows on the fill too. -->
 <component name="PanelRow" extends="Group">
     <interface>
         <field id="itemContent" type="node" onChange="onContent" />
@@ -18,8 +20,12 @@
     <script type="text/brightscript" uri="pkg:/components/items/PanelRow.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/I18n.brs" />
     <script type="text/brightscript" uri="pkg:/components/shared/Type.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <Poster id="fill" uri="pkg:/images/ui/square.9.png" blendColor="0x38BDF8FF" width="608" height="88" visible="false" />
+        <Poster id="swatch" width="36" height="36" uri="pkg:/images/ui/circle.png" visible="false">
+            <Poster id="swatchEdge" width="36" height="36" uri="pkg:/images/ui/edge-round.png" />
+        </Poster>
         <Label id="name" translation="[32, 0]" width="488" height="88" vertAlign="center" maxLines="1" color="0xEBEBEBFF" />
         <Label id="note" translation="[32, 48]" width="488" maxLines="1" color="0xA1A9B6FF" visible="false" />
         <Poster id="check" translation="[536, 24]" width="40" height="40" uri="pkg:/images/ui/icon-check-40.png" blendColor="0x38BDF8FF" visible="false" />

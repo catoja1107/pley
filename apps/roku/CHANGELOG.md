@@ -8,6 +8,11 @@ describes how they are made.
 
 ## [Unreleased]
 
+### Added
+
+- Settings → Appearance picks the theme (Dark, Light, Midnight, Obsidian or
+  Arctic) and the accent color, kept for the account on all its devices.
+
 ## [0.1.14] - 2026-11-25
 
 ### Fixed

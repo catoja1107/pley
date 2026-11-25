@@ -28,8 +28,8 @@ end sub
 sub onFocus()
     focused = m.top.hasFocus()
     m.fill.visible = focused
-    color = "0xEBEBEBFF"
-    if focused then color = "0x16191EFF"
+    color = uiTint("0xEBEBEBFF")
+    if focused then color = uiTint("0x16191EFF")
     m.globe.blendColor = color
     m.letters.color = color
 end sub

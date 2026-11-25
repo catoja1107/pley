@@ -30,7 +30,7 @@
     <children>
         <!-- The page's dark under the collapsed icons, clear by the pages'
              gutter. -->
-        <Poster id="shade" width="184" height="1080" uri="pkg:/images/ui/fade-left.png" />
+        <Poster id="shade" width="184" height="1080" uri="pkg:/images/ui/fade-left.png" blendColor="0x16191EFF" />
         <Group id="panel" opacity="0">
             <Rectangle width="520" height="1080" color="0x1E222AFF" />
             <Poster translation="[520, 0]" width="48" height="1080" uri="pkg:/images/ui/shadow.png" />

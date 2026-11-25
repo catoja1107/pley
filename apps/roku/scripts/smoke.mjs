@@ -350,6 +350,8 @@ async function signOut() {
 const qr = { shown: false, hidden: false };
 // Home asked for in the language chosen in Settings.
 const language = { home: false, refusedHome: false, afterRefused: "" };
+// Home asked for again in the look chosen in Settings.
+const look = { home: false };
 // The line saying the server requires two-step sign-in.
 const twoStep = { shown: false, hidden: false };
 // The player's notice when every connection is in use.
@@ -1285,10 +1287,10 @@ async function walk() {
   await settle();
   await openFromMenu(11, /^GET \/api\/auth\/me$/, "Settings");
   shoot("settings");
-  // The categories at the left (Profile, Playback, Server, Diagnostics,
-  // About, Sign out), OK going into one's rows at the right. Diagnostics'
-  // first row opens its page; About's second, the licenses.
-  await press("down", 3);
+  // The categories at the left (Profile, Appearance, Playback, Server,
+  // Diagnostics, About, Sign out), OK going into one's rows at the right.
+  // Diagnostics' first row opens its page; About's second, the licenses.
+  await press("down", 4);
   await press("select"); // Diagnostics' rows
   await press("select"); // Open diagnostics
   pages.diagnostics = await drawnWithin(3000, pageTextDrawn);
@@ -1318,7 +1320,7 @@ async function walk() {
   // Profile's Watch history, after Switch profile, Audio language,
   // Subtitles and Language: its plays; Back to Settings.
   await press("left");
-  await press("up");
+  await press("up", 2);
   await press("select"); // Profile's rows
   since = mark();
   await press("down", 4);
@@ -1418,6 +1420,82 @@ async function walk() {
   await press("select");
   await settle();
   fixture.languageRoute = true;
+  // Appearance, the second category: Midnight for the account, the screen
+  // made again in it on its Theme row, then amber over it, and Home made
+  // again in them; then Light, Home in it; then Dark with the theme's own
+  // accent again, which the rest of the walk expects, back on Profile's
+  // Language row.
+  await press("left"); // the categories, on Profile
+  await press("down"); // Appearance
+  await press("select"); // its rows, Theme first
+  since = mark();
+  await press("select"); // Theme: its choices, Dark checked
+  await sleep(500);
+  shoot("settings-theme");
+  await press("down", 2); // Midnight
+  await press("select");
+  await waitFor(/^PUT \/api\/me\/appearance$/, since, "the theme saved");
+  await settle();
+  shoot("settings-midnight");
+  await press("down"); // Accent color, the screen made again on Theme
+  since = mark();
+  await press("select"); // its choices, the theme's own checked
+  await sleep(500);
+  shoot("settings-accent");
+  await press("down", 5); // Amber
+  await press("select");
+  await waitFor(/^PUT \/api\/me\/appearance$/, since, "the accent saved");
+  await settle();
+  await press("left"); // the categories
+  since = mark();
+  await press("back"); // Home, made again in Midnight with amber
+  await waitFor(/^GET \/api\/hubs\/home$/, since, "Home in another look");
+  look.home = true;
+  await settle();
+  shoot("home-midnight");
+  await press("right");
+  await openFromMenu(11, /^GET \/api\/auth\/me$/, "Settings");
+  await settle();
+  await press("down"); // Appearance
+  await press("select");
+  since = mark();
+  await press("select"); // Theme, Midnight checked
+  await sleep(500);
+  await press("up"); // Light
+  await press("select");
+  await waitFor(/^PUT \/api\/me\/appearance$/, since, "Light saved");
+  await settle();
+  shoot("settings-light");
+  await press("left");
+  since = mark();
+  await press("back"); // Home in Light
+  await waitFor(/^GET \/api\/hubs\/home$/, since, "Home in Light");
+  await settle();
+  shoot("home-light");
+  await press("right");
+  await openFromMenu(11, /^GET \/api\/auth\/me$/, "Settings");
+  await settle();
+  await press("down"); // Appearance
+  await press("select");
+  since = mark();
+  await press("select"); // Theme, Light checked
+  await sleep(500);
+  await press("up"); // Dark
+  await press("select");
+  await waitFor(/^PUT \/api\/me\/appearance$/, since, "Dark saved");
+  await settle();
+  await press("down"); // Accent color
+  since = mark();
+  await press("select"); // Amber checked
+  await sleep(500);
+  await press("up", 5); // The theme's own
+  await press("select");
+  await waitFor(/^PUT \/api\/me\/appearance$/, since, "the theme's own accent saved");
+  await settle();
+  await press("left"); // the categories, on Appearance
+  await press("up"); // Profile
+  await press("select"); // its rows
+  await press("down", 3); // Language
   // Subtitles, above Language: from "Only for foreign dialogue" to
   // "Always", saved at once with the languages left as they were; Subtitle
   // language shows then.
@@ -1581,6 +1659,17 @@ const checks = [
   ["kept the server's answer instead of asking before each play", fixture.requests.filter((r) => r.method === "GET" && r.path.startsWith("/api/playback/network")).length < fixture.playbacks.filter((p) => p.kind !== "track").length],
   ["played the original in Automatic, the default", fixture.playbacks.length > 0 && fixture.playbacks.filter((p) => p.kind !== "track").every((p) => p.mode === "auto" && p.max_bitrate === null)],
   ["chose Español for the account in Settings, Home asked for again in it, then Automatic", JSON.stringify(fixture.languagesSaved) === '["es",null]' && language.home],
+  [
+    "chose Midnight, amber and Light for the account in Appearance, Home made again in them, then Dark with its own accent",
+    JSON.stringify(fixture.looksSaved) ===
+      JSON.stringify([
+        { theme: "midnight", accent: null },
+        { theme: "midnight", accent: "amber" },
+        { theme: "light", accent: "amber" },
+        { theme: "dark", accent: "amber" },
+        { theme: "dark", accent: null },
+      ]) && look.home,
+  ],
   [
     "on a server without the language route, Français kept on the Roku, and Automatic in Settings opened again forgot it with no request",
     JSON.stringify(fixture.languagesRefused) === '["fr"]' && language.refusedHome && language.afterRefused === "en",

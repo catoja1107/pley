@@ -22,6 +22,12 @@ sub init()
     m.infoMeta = m.top.findNode("infoMeta")
     m.infoText = m.top.findNode("infoText")
     m.guide = m.top.findNode("guide")
+    ' TimeGrid takes pictures, not colors: the look's.
+    pictures = themeGuideImages(m.global.look)
+    m.guide.focusBitmapUri = pictures.focus
+    m.guide.programBackgroundBitmapUri = pictures.cell
+    m.guide.channelInfoBackgroundBitmapUri = pictures.cell
+    m.guide.pastTimeScreenBitmapUri = pictures.past
     m.cards = m.top.findNode("cards")
     m.message = m.top.findNode("message")
     m.retry = m.top.findNode("retry")

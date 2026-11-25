@@ -10,11 +10,12 @@
     <script type="text/brightscript" uri="pkg:/components/items/ProfileTile.brs" />
     <script type="text/brightscript" uri="pkg:/components/shared/Type.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/I18n.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <!-- A circle, as the rail's profile: focused, the accent's ring
              around it, inside the tile (a grid cuts off what its items
              draw outside them). -->
-        <Poster id="ring" width="244" height="244" uri="pkg:/images/ui/ring-face.png" visible="false" />
+        <Poster id="ring" width="244" height="244" uri="pkg:/images/ui/ring-face.png" blendColor="0x7DD3FCFF" visible="false" />
         <Poster id="face" translation="[12, 12]" width="220" height="220" uri="pkg:/images/ui/face.png" blendColor="0x2E3440FF" />
         <Label id="initial" translation="[12, 12]" width="220" height="220" horizAlign="center" vertAlign="center" color="0xEBEBEBFF" font="font:ExtraLargeBoldSystemFont" />
         <MaskGroup translation="[12, 12]" maskUri="pkg:/images/ui/face.png" maskSize="[220, 220]">
