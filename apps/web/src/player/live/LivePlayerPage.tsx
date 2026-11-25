@@ -17,6 +17,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useDarkLook } from "@/appearance";
 import { errorMessage, isApiError } from "@/api/client";
 import { onServerEvent } from "@/api/events";
 import type { Control, ServerEvent } from "@/api/types";
@@ -198,7 +199,12 @@ function useZap(category: LiveCategory, id: number): (by: 1 | -1) => Channel | n
 }
 
 function Blackout({ children }: { children: React.ReactNode }) {
-  return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black p-4 text-white">{children}</div>;
+  const dark = useDarkLook();
+  return (
+    <div style={dark} className="fixed inset-0 z-50 flex items-center justify-center bg-black p-4 text-white">
+      {children}
+    </div>
+  );
 }
 
 function LivePlayer({
@@ -217,6 +223,8 @@ function LivePlayer({
   const { t } = useTranslation(["livetv", "common"]);
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
+  // Dark in the Light theme, as the picture needs (appearance/).
+  const dark = useDarkLook();
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<HlsType | null>(null);
   // A channel sent as it is plays straight from its stream (mpegts.js).
@@ -792,6 +800,7 @@ function LivePlayer({
   return (
     <div
       ref={containerRef}
+      style={dark}
       className={cn("fixed inset-0 z-50 select-none overflow-hidden bg-black text-white", !controlsVisible && "cursor-none")}
       onMouseMove={poke}
       onTouchStart={poke}

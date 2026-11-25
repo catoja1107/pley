@@ -11,6 +11,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { ToastProvider } from "@/components/Toast";
 import { loadNamespaces } from "@/i18n";
 import { LanguageSync } from "@/i18n/LanguageSync";
+import { AppearanceSync } from "@/appearance/AppearanceSync";
 import type { LazyNamespace } from "@/i18n/resources";
 import { PageSpinner } from "@/components/ui";
 import { AccountPage } from "@/pages/AccountPage";
@@ -334,6 +335,7 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageSync />
+      <AppearanceSync />
       <ToastProvider>
         <RouterProvider router={router} />
       </ToastProvider>

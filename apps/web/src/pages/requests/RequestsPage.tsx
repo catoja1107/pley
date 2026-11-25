@@ -235,7 +235,7 @@ function BulkBar({ picked, clear, summary }: { picked: MediaRequest[]; clear: ()
 /** The list as it will be: a poster, a title, a stage and who asked, in each row. */
 function ListSkeleton() {
   return (
-    <div className="divide-y divide-white/[0.05] rounded-lg border border-border bg-surface" aria-busy>
+    <div className="divide-y divide-ink/[0.05] rounded-lg border border-border bg-surface" aria-busy>
       {Array.from({ length: 4 }, (_, i) => (
         <div key={i} className="flex gap-3 px-4 py-3.5">
           <Skeleton className="aspect-[2/3] w-14 shrink-0 rounded" />
@@ -376,7 +376,7 @@ function RequestsView({ summary }: { summary: RequestSummary }) {
                       <span
                         className={cn(
                           "min-w-5 rounded-full px-1.5 text-center text-[11px] font-semibold tabular-nums",
-                          v === "attention" && summary.failed > 0 ? "bg-danger text-white" : v === "attention" ? "bg-warning text-black" : "bg-white/10 text-fg/80",
+                          v === "attention" && summary.failed > 0 ? "bg-danger text-white" : v === "attention" ? "bg-warning text-black" : "bg-ink/10 text-fg/80",
                         )}
                       >
                         {count}
@@ -463,7 +463,7 @@ function RequestsView({ summary }: { summary: RequestSummary }) {
         )
       ) : (
         <div className="space-y-3">
-          <ul className="divide-y divide-white/[0.05] rounded-lg border border-border bg-surface" aria-busy={requests.isFetching}>
+          <ul className="divide-y divide-ink/[0.05] rounded-lg border border-border bg-surface" aria-busy={requests.isFetching}>
             {shown.map((r) => (
               <RequestCard
                 key={r.id}

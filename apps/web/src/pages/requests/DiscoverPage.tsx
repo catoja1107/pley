@@ -47,7 +47,7 @@ function listOf(value: string | null): DiscoverList | null {
 function GridHeading({ back, backLabel, children }: { back: string; backLabel: string; children: ReactNode }) {
   return (
     <div className="mb-3 flex items-center gap-2">
-      <Link to={back} aria-label={backLabel} className="-ml-1.5 rounded-full p-1 text-muted transition-colors hover:bg-white/10 hover:text-fg">
+      <Link to={back} aria-label={backLabel} className="-ml-1.5 rounded-full p-1 text-muted transition-colors hover:bg-ink/10 hover:text-fg">
         <ChevronLeft className="size-5" />
       </Link>
       {children}
@@ -149,7 +149,7 @@ function Hero({ summary }: { summary: RequestSummary }) {
   const to = titleUrl(first.kind, first.tmdb_id);
   return (
     <section aria-label={t("discover.trendingNow")} className="px-4 sm:px-8">
-      <div className="relative isolate overflow-hidden rounded-xl bg-surface-2 ring-1 ring-white/5">
+      <div className="relative isolate overflow-hidden rounded-xl bg-surface-2 ring-1 ring-ink/5">
         {/* Placed by a box of its own: the picture's is positioned already (relative). */}
         <div className="absolute inset-0 -z-10">
           <Artwork
@@ -197,7 +197,7 @@ function RequestPoster({ request, width, manage }: { request: MediaRequest; widt
       <Link
         to={to}
         aria-label={`${request.title}, ${stageWords(request, manage).label}`}
-        className="relative block overflow-hidden rounded-md bg-surface-2 outline-none ring-1 ring-white/5 transition duration-200 hover:ring-2 hover:ring-accent focus-visible:ring-2 focus-visible:ring-accent"
+        className="relative block overflow-hidden rounded-md bg-surface-2 outline-none ring-1 ring-ink/5 transition duration-200 hover:ring-2 hover:ring-accent focus-visible:ring-2 focus-visible:ring-accent"
       >
         <Artwork
           candidates={request.poster_url ? [request.poster_url] : []}

@@ -76,7 +76,7 @@ export function ItemArt({
       eager
       className={cn(
         ASPECT_CLASS[aspect],
-        "w-full shadow-2xl shadow-black/60 ring-1 ring-white/10",
+        "w-full shadow-2xl shadow-black/60 ring-1 ring-ink/10",
         item.kind === "artist" ? "rounded-full" : "rounded-lg",
         className,
       )}
@@ -127,7 +127,7 @@ export function RatingBadge({ rating }: { rating: number | null }) {
 
 export function ContentRating({ value }: { value: string | null }) {
   if (!value) return null;
-  return <span className="rounded border border-white/25 px-1.5 py-px text-[11px] font-semibold text-fg/90">{value}</span>;
+  return <span className="rounded border border-ink/25 px-1.5 py-px text-[11px] font-semibold text-fg/90">{value}</span>;
 }
 
 export function Genres({ genres }: { genres: string[] }) {
@@ -135,7 +135,7 @@ export function Genres({ genres }: { genres: string[] }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {genres.map((g) => (
-        <span key={g} className="rounded-full bg-white/[0.07] px-2.5 py-0.5 text-xs text-fg/85">
+        <span key={g} className="rounded-full bg-ink/[0.07] px-2.5 py-0.5 text-xs text-fg/85">
           {g}
         </span>
       ))}

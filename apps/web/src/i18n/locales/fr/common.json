@@ -61,6 +61,30 @@
     "serverLabel": "La langue de Pley",
     "choose": "Choisir une langue"
   },
+  "appearance": {
+    "label": "Apparence",
+    "accountHint": "L’apparence de Pley pour vous, sur tous les appareils où vous vous connectez. Automatique suit le réglage clair ou sombre de chaque appareil.",
+    "deviceHint": "L’apparence de Pley sur cet appareil. Mettez Pley à jour sur le serveur pour la garder pour votre compte.",
+    "theme": "Thème",
+    "accent": "Couleur d’accent",
+    "automatic": "Automatique ({{theme}})",
+    "themeAccent": "Celle du thème ({{accent}})",
+    "themes": {
+      "dark": "Sombre",
+      "light": "Clair",
+      "midnight": "Minuit",
+      "obsidian": "Obsidienne",
+      "arctic": "Arctique"
+    },
+    "accents": {
+      "sky": "Ciel",
+      "blue": "Bleu",
+      "emerald": "Émeraude",
+      "teal": "Bleu canard",
+      "amber": "Ambre",
+      "violet": "Violet"
+    }
+  },
   "format": {
     "never": "jamais",
     "seconds": "{{n}} s",

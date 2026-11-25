@@ -19,7 +19,8 @@ describes how they are made.
   or in Tautulli until it plays.
 - Each account keeps a theme (System, Dark, Light, Midnight, Obsidian or
   Arctic) and an accent color, which the apps that offer them show on all
-  its devices.
+  its devices. The web app picks them in Account → Appearance; System
+  follows the device's light or dark setting.
 
 ### Changed
 

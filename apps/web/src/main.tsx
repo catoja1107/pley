@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
+import { startLook } from "./appearance";
 import { startLanguage } from "./i18n";
 import "./index.css";
 
@@ -22,8 +23,10 @@ window.addEventListener("vite:preloadError", (event) => {
 const root = document.getElementById("root");
 if (!root) throw new Error("#root element missing");
 
-// The first page shows in the language of the last visit (or the browser's),
-// its words loaded first.
+// The first page shows in the look of the last visit (appearance/), so
+// nothing flashes, and in the language of the last visit (or the
+// browser's), its words loaded first.
+startLook();
 void startLanguage().then(() =>
   createRoot(root).render(
     <StrictMode>

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle, TriangleAlert } from "lucide-react";
+import { useDarkLook } from "@/appearance";
 import { errorMessage } from "@/api/client";
 import { keys, useItem } from "@/api/hooks";
 import type { Id } from "@/api/types";
@@ -21,8 +22,9 @@ function num(v: string | null): number | null {
 
 function PlayerMessage({ title, message, onBack }: { title: string; message: string; onBack: () => void }) {
   const { t } = useTranslation("player");
+  const dark = useDarkLook();
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black p-6 text-center text-white">
+    <div style={dark} className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black p-6 text-center text-white">
       <TriangleAlert className="size-12 text-accent" />
       <div>
         <div className="text-lg font-semibold">{title}</div>

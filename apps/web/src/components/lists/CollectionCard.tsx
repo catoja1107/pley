@@ -27,7 +27,7 @@ export function CollectionCard({
       <Link
         to={to}
         aria-label={collection.title}
-        className="relative block overflow-hidden rounded-md bg-surface-2 outline-none ring-1 ring-white/5 transition duration-200 hover:ring-2 hover:ring-accent focus-visible:ring-2 focus-visible:ring-accent"
+        className="relative block overflow-hidden rounded-md bg-surface-2 outline-none ring-1 ring-ink/5 transition duration-200 hover:ring-2 hover:ring-accent focus-visible:ring-2 focus-visible:ring-accent"
       >
         <Artwork
           candidates={[collection.poster_url]}

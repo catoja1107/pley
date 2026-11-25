@@ -168,7 +168,7 @@ const ChannelListRow = memo(function ChannelListRow({
         {on ? (
           <>
             <div className="truncate text-xs text-muted">{on.title}</div>
-            <div className="mt-1 h-0.5 overflow-hidden rounded-full bg-white/10">
+            <div className="mt-1 h-0.5 overflow-hidden rounded-full bg-ink/10">
               <div className="h-full bg-accent" style={{ width: `${programProgress(on, now) * 100}%` }} />
             </div>
           </>
@@ -246,7 +246,7 @@ export const ChannelCard = memo(function ChannelCard({
           <button
             type="button"
             onClick={() => onDetails(channel, on)}
-            className="-mx-1 -my-0.5 flex items-start gap-1 rounded px-1 py-0.5 text-left text-sm text-fg/90 transition-colors hover:bg-white/[0.05]"
+            className="-mx-1 -my-0.5 flex items-start gap-1 rounded px-1 py-0.5 text-left text-sm text-fg/90 transition-colors hover:bg-ink/[0.05]"
           >
             <span className="line-clamp-1 flex-1">{on.title}</span>
             <Info className="mt-0.5 size-3.5 shrink-0 text-subtle opacity-0 transition-opacity group-hover:opacity-100" />
@@ -256,7 +256,7 @@ export const ChannelCard = memo(function ChannelCard({
         )}
         {on ? (
           <div className="flex items-center gap-2">
-            <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
+            <div className="h-1 flex-1 overflow-hidden rounded-full bg-ink/10">
               <div
                 className="h-full rounded-full bg-accent transition-[width] duration-700"
                 style={{ width: `${programProgress(on, now) * 100}%` }}

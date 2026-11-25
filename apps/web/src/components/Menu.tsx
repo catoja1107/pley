@@ -160,7 +160,7 @@ export function MenuItem({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-sm transition-colors outline-none hover:bg-white/5 focus-visible:bg-white/10 disabled:opacity-50",
+        "flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-sm transition-colors outline-none hover:bg-ink/5 focus-visible:bg-ink/10 disabled:opacity-50",
         danger ? "text-danger" : "text-fg",
       )}
     >

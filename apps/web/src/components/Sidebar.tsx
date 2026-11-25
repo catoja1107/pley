@@ -32,7 +32,7 @@ function NavItem({ to, icon, children, end, trailing }: { to: string; icon: Reac
       className={({ isActive }) =>
         cn(
           "group relative flex h-8 items-center gap-2.5 rounded-md px-3 text-sm font-medium transition-colors duration-150",
-          isActive ? "bg-white/[0.07] text-fg" : "text-muted hover:bg-white/[0.04] hover:text-fg",
+          isActive ? "bg-ink/[0.07] text-fg" : "text-muted hover:bg-ink/[0.04] hover:text-fg",
         )
       }
     >
@@ -118,7 +118,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           user.is_admin ? (
             <Link
               to="/settings/libraries?add=1"
-              className="flex h-8 items-center gap-2.5 rounded-md px-3 text-sm text-muted transition-colors hover:bg-white/[0.04] hover:text-fg"
+              className="flex h-8 items-center gap-2.5 rounded-md px-3 text-sm text-muted transition-colors hover:bg-ink/[0.04] hover:text-fg"
             >
               <Plus className="size-4 text-subtle" />
               {t("sidebar.addLibrary")}

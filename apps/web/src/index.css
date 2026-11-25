@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /*
- * Theme tokens. Rebrand by overriding these custom properties
- * (e.g. `:root { --color-accent: #7c5cff; }`).
+ * Theme tokens: Pley's Dark with the sky accent. The theme and accent an
+ * account picks (src/appearance) set them again on the page.
  */
 @theme {
   /* Light blue brand accent. */
@@ -26,6 +26,11 @@
   --color-fg: #e9ebef;
   --color-muted: #a1a9b6;
   --color-subtle: #6c7584;
+  /* The strongest the page draws and its opposite: white and black on the
+     dark themes, swapped on Light. Overlays on surfaces are ink at a few
+     percent. */
+  --color-ink: #ffffff;
+  --color-paper: #000000;
 
   --color-success: #3fb27f;
   --color-danger: #e5484d;

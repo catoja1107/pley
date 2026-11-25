@@ -9,9 +9,9 @@ type Size = "sm" | "md" | "lg";
 const variants: Record<Variant, string> = {
   primary: "bg-accent text-accent-fg hover:bg-accent-hover shadow-sm shadow-black/30",
   secondary: "bg-surface-3 text-fg hover:bg-border",
-  ghost: "bg-transparent text-muted hover:bg-white/5 hover:text-fg",
+  ghost: "bg-transparent text-muted hover:bg-ink/5 hover:text-fg",
   danger: "bg-danger/90 text-white hover:bg-danger",
-  outline: "border border-border-strong text-fg hover:bg-white/5",
+  outline: "border border-border-strong text-fg hover:bg-ink/5",
 };
 
 const sizes: Record<Size, string> = {
@@ -73,7 +73,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       aria-label={label}
       title={label}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full text-muted transition-colors duration-150 hover:bg-white/10 hover:text-fg disabled:opacity-40",
+        "inline-flex shrink-0 items-center justify-center rounded-full text-muted transition-colors duration-150 hover:bg-ink/10 hover:text-fg disabled:opacity-40",
         size === "xs" && "size-7",
         size === "sm" && "size-8",
         size === "md" && "size-10",
@@ -200,7 +200,7 @@ export function Badge({
     <span
       className={cn(
         "inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs font-semibold",
-        tone === "neutral" && "bg-white/10 text-fg/90",
+        tone === "neutral" && "bg-ink/10 text-fg/90",
         tone === "accent" && "bg-accent/15 text-accent",
         tone === "success" && "bg-success/15 text-success",
         tone === "danger" && "bg-danger/15 text-danger",
@@ -259,7 +259,7 @@ export function ProgressBar({ value, className, barClassName, label }: { value: 
   const pct = Math.max(0, Math.min(1, value)) * 100;
   const named = label ? { role: "progressbar", "aria-label": label, "aria-valuemin": 0, "aria-valuemax": 100, "aria-valuenow": Math.round(pct) } : {};
   return (
-    <div className={cn("h-1 w-full overflow-hidden rounded-full bg-white/15", className)} {...named}>
+    <div className={cn("h-1 w-full overflow-hidden rounded-full bg-ink/15", className)} {...named}>
       <div className={cn("h-full rounded-full bg-accent transition-[width] duration-300", barClassName)} style={{ width: `${pct}%` }} />
     </div>
   );

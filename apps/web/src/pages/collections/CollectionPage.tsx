@@ -108,7 +108,7 @@ function CollectionView({ collection: c }: { collection: CollectionDetail }) {
               title={c.title}
               mark="play"
               eager
-              className="aspect-[2/3] w-full rounded-lg shadow-2xl shadow-black/60 ring-1 ring-white/10"
+              className="aspect-[2/3] w-full rounded-lg shadow-2xl shadow-black/60 ring-1 ring-ink/10"
             />
           </div>
           <div className="min-w-0 flex-1 space-y-4">
@@ -276,7 +276,7 @@ function ManageItems({ collection: c }: { collection: CollectionDetail }) {
               key={item.id}
               {...rowProps(i)}
               className={cn(
-                "group flex items-center gap-3 rounded-md border-y-2 border-transparent px-2 py-1.5 transition-colors hover:bg-white/[0.04]",
+                "group flex items-center gap-3 rounded-md border-y-2 border-transparent px-2 py-1.5 transition-colors hover:bg-ink/[0.04]",
                 dragging === i && "opacity-40",
                 mark === "before" && "border-t-accent",
                 mark === "after" && "border-b-accent",
