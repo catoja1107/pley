@@ -465,9 +465,13 @@ async function walk() {
   since = mark();
   await press("select"); // Resume
   await waitFor(/^POST \/api\/playback$/, since, "a playback session");
-  await waitFor(/^GET \/api\/media\/pley_mk_s2\/subtitles-4\.json\?at=\d+$/, since, "the picture subtitles where the playback starts");
-  const firstList = mark();
-  await waitFor(/^GET \/api\/media\/pley_mk_s2\/subtitles-4\.json\?at=\d+$/, firstList, "the rest of the picture subtitles", { ms: 10000 });
+  const list = /^GET \/api\/media\/pley_mk_s2\/subtitles-4\.json\?at=\d+$/;
+  await waitFor(list, since, "the picture subtitles where the playback starts");
+  // Counted from the first list asked for, not from where the screen
+  // settled: the next can come while it settles, and none after it once
+  // the list is whole.
+  const firstList = fixture.requests.findIndex((r, at) => at >= since && list.test(`${r.method} ${r.path}`)) + 1;
+  await waitFor(list, firstList, "the rest of the picture subtitles", { ms: 10000 });
   pictures.loaded = await loadedWithin(5000);
   shoot("player-pictures");
   since = mark();
