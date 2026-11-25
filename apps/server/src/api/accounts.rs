@@ -702,6 +702,12 @@ pub struct ProfilePatch {
     /// One of `crate::i18n::LANGUAGES`; `null`: the server's.
     #[serde(default, deserialize_with = "nullable")]
     language: Option<Option<String>>,
+    /// One of `accounts::THEMES`; `null`: dark.
+    #[serde(default, deserialize_with = "nullable")]
+    theme: Option<Option<String>>,
+    /// One of `accounts::ACCENTS`; `null`: the theme's own.
+    #[serde(default, deserialize_with = "nullable")]
+    accent: Option<Option<String>>,
 }
 
 pub async fn update_me(
@@ -745,6 +751,15 @@ pub async fn update_me(
     }
     if let Some(language) = body.language {
         save_language(&state, user.id, language).await?;
+    }
+    for (column, value) in [("theme", body.theme), ("accent", body.accent)] {
+        let Some(value) = value else { continue };
+        check_look(column, value.as_deref())?;
+        sqlx::query(sqlx::AssertSqlSafe(format!("UPDATE users SET {column} = ? WHERE id = ?")))
+            .bind(value)
+            .bind(user.id)
+            .execute(&state.db.write)
+            .await?;
     }
     Ok(Json(accounts::user(&state.db, user.id).await?.ok_or(AppError::Unauthorized)?))
 }
@@ -804,6 +819,50 @@ pub async fn set_language(
     Json(body): Json<LanguageChoice>,
 ) -> ApiResult<Json<Me>> {
     save_language(&state, user.id, body.language).await?;
+    me(State(state), user).await
+}
+
+/// The account's theme or accent (column, "theme" or "accent"): one of
+/// `accounts::THEMES` or `accounts::ACCENTS`, or `None` for dark, or the
+/// theme's own accent.
+fn check_look(column: &str, value: Option<&str>) -> ApiResult<()> {
+    let known = if column == "theme" { accounts::THEMES } else { accounts::ACCENTS };
+    match value {
+        Some(name) if !known.contains(&name) => {
+            Err(AppError::bad_request(format!("{column} is one of {}, or null", known.join(", "))))
+        }
+        _ => Ok(()),
+    }
+}
+
+/// How the apps look, both at once: a field left out takes its default, as
+/// `null` does.
+#[derive(Deserialize)]
+pub struct Appearance {
+    /// `null` or left out: dark.
+    #[serde(default)]
+    theme: Option<String>,
+    /// `null` or left out: the theme's own.
+    #[serde(default)]
+    accent: Option<String>,
+}
+
+/// `PUT /api/me/appearance`: the theme and accent the account sees the apps
+/// in, for apps allowed `play` as for the web (which also has `PATCH
+/// /api/me`). The answer is the profile as `GET /api/auth/me` shows it.
+pub async fn set_appearance(
+    State(state): State<AppState>,
+    user: AuthUser,
+    Json(body): Json<Appearance>,
+) -> ApiResult<Json<Me>> {
+    check_look("theme", body.theme.as_deref())?;
+    check_look("accent", body.accent.as_deref())?;
+    sqlx::query("UPDATE users SET theme = ?, accent = ? WHERE id = ?")
+        .bind(body.theme)
+        .bind(body.accent)
+        .bind(user.id)
+        .execute(&state.db.write)
+        .await?;
     me(State(state), user).await
 }
 

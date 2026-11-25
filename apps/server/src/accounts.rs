@@ -39,10 +39,20 @@ struct UserRow {
     subtitle_language: Option<String>,
     subtitle_mode: String,
     language: Option<String>,
+    theme: Option<String>,
+    accent: Option<String>,
     has_password: bool,
     two_step: bool,
     request_access: String,
 }
+
+/// The themes the apps are drawn in (docs/API.md#appearance): `system`
+/// follows the device's light or dark where it has one.
+pub const THEMES: &[&str] = &["system", "dark", "light", "midnight", "obsidian", "arctic"];
+/// An account that chose none sees Pley as it always looked.
+pub const DEFAULT_THEME: &str = "dark";
+/// The accents an account may pick over its theme's own.
+pub const ACCENTS: &[&str] = &["sky", "blue", "emerald", "teal", "amber", "violet"];
 
 /// A user as the API shows it.
 #[derive(Debug, Clone, Serialize)]
@@ -88,6 +98,10 @@ pub struct UserDto {
     /// The language the account sees Pley in (see `crate::i18n`); `None`:
     /// the server's.
     pub language: Option<String>,
+    /// The theme the account sees the apps in, one of [`THEMES`].
+    pub theme: String,
+    /// The accent over it, one of [`ACCENTS`]; `None`: the theme's own.
+    pub accent: Option<String>,
     /// Signs in with a password: false for a managed profile (reached by
     /// switching), and for an account without one until an administrator
     /// gives it one.
@@ -101,7 +115,7 @@ pub struct UserDto {
 
 const USER_COLUMNS: &str = "id, username, display_name, is_admin, managed, home, pin_hash IS NOT NULL AS has_pin,
     avatar, avatar_color, all_libraries, max_age, max_age_system, disabled, created_at, audio_language, subtitle_language,
-    subtitle_mode, language, password_hash NOT LIKE '!%' AS has_password,
+    subtitle_mode, language, theme, accent, password_hash NOT LIKE '!%' AS has_password,
     EXISTS (SELECT 1 FROM two_step t WHERE t.user_id = users.id) AS two_step, request_access";
 
 impl UserRow {
@@ -130,6 +144,9 @@ impl UserRow {
             subtitle_language: self.subtitle_language,
             subtitle_mode: SubtitleMode::parse(&self.subtitle_mode),
             language: self.language,
+            // A value no longer offered reads as none chosen.
+            theme: self.theme.filter(|t| THEMES.contains(&t.as_str())).unwrap_or_else(|| DEFAULT_THEME.to_owned()),
+            accent: self.accent.filter(|a| ACCENTS.contains(&a.as_str())),
             has_password: self.has_password,
             two_step: self.two_step,
             request_access: if self.is_admin {
@@ -955,10 +972,24 @@ mod tests {
             subtitle_language: Some("fre".into()),
             subtitle_mode: "foreign".into(),
             language: None,
+            theme: None,
+            accent: None,
             has_password: true,
             two_step: false,
             request_access: "off".into(),
         }
+    }
+
+    #[test]
+    fn a_look_no_longer_offered_reads_as_none_chosen() {
+        let dto = user_row(false, None).into_dto(vec![]);
+        assert_eq!((dto.theme.as_str(), dto.accent), ("dark", None));
+        let kept = UserRow { theme: Some("obsidian".into()), accent: Some("amber".into()), ..user_row(false, None) };
+        let dto = kept.into_dto(vec![]);
+        assert_eq!((dto.theme.as_str(), dto.accent.as_deref()), ("obsidian", Some("amber")));
+        let gone = UserRow { theme: Some("sepia".into()), accent: Some("mauve".into()), ..user_row(false, None) };
+        let dto = gone.into_dto(vec![]);
+        assert_eq!((dto.theme.as_str(), dto.accent), ("dark", None));
     }
 
     #[test]

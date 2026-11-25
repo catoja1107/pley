@@ -17,6 +17,9 @@ describes how they are made.
 - A player can ask for the next track ahead (`ahead`), to play it
   without a gap: it isn't shown as playing on the dashboard, to remotes
   or in Tautulli until it plays.
+- Each account keeps a theme (System, Dark, Light, Midnight, Obsidian or
+  Arctic) and an accent color, which the apps that offer them show on all
+  its devices.
 
 ### Changed
 
