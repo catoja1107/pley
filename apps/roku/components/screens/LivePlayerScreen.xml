@@ -34,6 +34,7 @@
     <script type="text/brightscript" uri="pkg:/components/lib/Format.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Live.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Remote.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <Rectangle width="1920" height="1080" color="0x000000FF" />
         <Video id="video" width="1920" height="1080" enableUI="false" />
@@ -84,7 +85,7 @@
             <Rectangle width="1920" height="1080" color="0x16191EF2" />
             <Label id="noticeTitle" translation="[96, 340]" width="1728" wrap="true" color="0xEBEBEBFF" font="font:ExtraLargeBoldSystemFont" />
             <Label id="noticeText" translation="[96, 430]" width="1500" wrap="true" maxLines="6" color="0xA1A9B6FF" font="font:SmallSystemFont" />
-            <PillButtons id="noticeButtons" translation="[96, 700]" minWidth="400" />
+            <PillButtons id="noticeButtons" dark="true" translation="[96, 700]" minWidth="400" />
         </Group>
         <!-- The category's channels, at the left over the video. -->
         <Group id="list" visible="false">

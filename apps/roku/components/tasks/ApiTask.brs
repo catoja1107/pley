@@ -425,7 +425,7 @@ sub apiCallAnswered(job as object, status as integer, body as string, headers as
     answer = httpAnswer(status, body)
     if job.network <> "" then aqNetworkKeep(m.networkKept, job.network, answer, m.clock.TotalMilliseconds())
     if httpTrue(job.me) then apiKnowProfile(job, answer)
-    if httpTrue(job.profile) then apiProfileLanguage(job, answer)
+    if httpTrue(job.profile) then apiProfileAnswered(job, answer)
     if answer.ok and job.play and apiAbandoned(job.request)
         ' The player left before its session came: the server would go on
         ' preparing it.
@@ -845,6 +845,8 @@ sub apiSelect(url as string, name as string)
     ' The language facts were the server before's, or are asked again.
     m.session.accountHeard = false
     m.session.accountLanguage = ""
+    m.session.accountTheme = ""
+    m.session.accountAccent = ""
     m.session.serverHeard = false
     m.session.serverLanguage = ""
     if url <> m.server
@@ -907,6 +909,8 @@ sub apiAskProfile()
     ' until it is heard.
     m.session.accountHeard = false
     m.session.accountLanguage = ""
+    m.session.accountTheme = ""
+    m.session.accountAccent = ""
     if m.tokens = invalid then return
     job = apiJob("call", "GET", m.server + "/api/auth/me")
     job.auth = true
@@ -926,19 +930,28 @@ sub apiKnowProfile(job as object, answer as object)
     m.session.profileId = httpNumber(data.id, 0)
     m.session.profileName = httpSentence(data.name)
     m.session.accountLanguage = httpString(data.language)
+    apiKnowLook(data)
     m.session.accountHeard = true
     profKeepPin(CreateObject("roRegistrySection", "household"), m.server, data)
 end sub
 
 ' A request that answers with the profile (spec.profile: PUT
-' /api/me/language): the account's language as it is now, unless another
-' profile or server came meanwhile.
-sub apiProfileLanguage(job as object, answer as object)
+' /api/me/language, /api/me/appearance): the account's language and look as
+' they are now, unless another profile or server came meanwhile.
+sub apiProfileAnswered(job as object, answer as object)
     if not answer.ok or job.gen <> m.switches or job.server <> m.server then return
     data = httpObject(answer.data)
     if data = invalid or not data.DoesExist("language") then return
     m.session.accountLanguage = httpString(data.language)
+    apiKnowLook(data)
     m.session.accountHeard = true
+end sub
+
+' The account's theme and accent as the profile has them: none from a
+' Pley from before themes, and an accent "" for the theme's own.
+sub apiKnowLook(data as object)
+    m.session.accountTheme = httpString(data.theme)
+    m.session.accountAccent = httpString(data.accent)
 end sub
 
 sub apiUseServer(request as object, spec as object)

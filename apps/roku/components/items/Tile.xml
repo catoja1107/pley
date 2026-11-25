@@ -27,6 +27,7 @@
     <script type="text/brightscript" uri="pkg:/components/lib/I18n.brs" />
     <script type="text/brightscript" uri="pkg:/components/shared/Type.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Mark.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <Group translation="[24, 30]">
             <Rectangle id="well" color="0x262B35FF" />
@@ -46,7 +47,9 @@
                     <Poster id="hairline" uri="pkg:/images/ui/hairline.9.png" />
                     <Rectangle id="track" color="0x16191E99" visible="false" />
                     <Rectangle id="fill" color="0x38BDF8FF" visible="false" />
-                    <Poster id="watched" uri="pkg:/images/ui/tick.png" width="40" height="40" visible="false" />
+                    <Poster id="watched" uri="pkg:/images/ui/r4.9.png" width="40" height="40" blendColor="0x16191ECC" visible="false">
+                        <Poster uri="pkg:/images/ui/tick.png" width="40" height="40" blendColor="0x38BDF8FF" />
+                    </Poster>
                     <Poster id="badgeBack" uri="pkg:/images/ui/r4.9.png" height="36" visible="false" />
                     <Label id="badge" height="36" vertAlign="center" color="0x16191EFF" visible="false" />
                     <!-- Two quality badges at most: "4K" and the dynamic range,
@@ -57,7 +60,7 @@
                     <Poster id="qualityBack1" uri="pkg:/images/ui/r4.9.png" blendColor="0x0B0D10CC" height="36" visible="false" />
                     <Label id="quality1" height="36" vertAlign="center" color="0xEBEBEBFF" visible="false" />
                     <!-- The accent's ring, against the well all round. -->
-                    <Poster id="ring" uri="pkg:/images/ui/ring.9.png" opacity="0" />
+                    <Poster id="ring" uri="pkg:/images/ui/ring.9.png" blendColor="0x7DD3FCFF" opacity="0" />
                 </Group>
             </Group>
             <Label id="title" color="0xEBEBEBFF" maxLines="1" />

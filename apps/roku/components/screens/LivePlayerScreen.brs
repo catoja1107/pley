@@ -16,6 +16,8 @@
 ' watching stopped from elsewhere stops here, saying who stopped it.
 
 sub init()
+    ' Dark in the Light theme, with the accent (Colors.brs).
+    m.uiDark = true
     m.video = m.top.findNode("video")
     m.waiting = m.top.findNode("waiting")
     m.card = m.top.findNode("card")
@@ -60,6 +62,7 @@ sub init()
     m.stalling = false
     for each spinner in [m.waiting, m.tuning]
         spinner.poster.uri = "pkg:/images/spinner.png"
+        spinner.poster.blendColor = uiTint("0x38BDF8FF")
         spinner.poster.width = 64
         spinner.poster.height = 64
     end for
@@ -256,6 +259,7 @@ end sub
 ' else at its top, or at its top or bottom as pick says (paged to).
 sub showListPage(page as object, content as object, pick as string)
     m.listPage = page
+    uiPlayerContent(content)
     m.channelList.content = content
     markCurrent()
     if not m.categoryList.visible then m.listRange.text = liveRange(page.offset, page.channels.Count(), page.total)
@@ -436,7 +440,9 @@ sub buildCategories(keep as boolean)
         if m.railEntries[i].kind <> "heading" and m.railEntries[i].key = wanted then at = i
     end for
     m.railFocused = at
-    m.categoryList.content = nodesContent(liveRailItems(m.railEntries, m.open, m.listCategory))
+    categories = nodesContent(liveRailItems(m.railEntries, m.open, m.listCategory))
+    uiPlayerContent(categories)
+    m.categoryList.content = categories
     m.categoryList.jumpToItem = at
 end sub
 

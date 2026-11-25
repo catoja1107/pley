@@ -7,6 +7,7 @@ sub init()
     ' Pley's type where the markup names Roku's (a list's items are made
     ' after the scene restyled the screen).
     uiRestyle(m.top)
+    uiRecolor(m.top)
 end sub
 
 sub onContent()
@@ -40,21 +41,21 @@ sub onFocus()
     focused = m.top.itemHasFocus and m.top.listHasFocus
     m.focus.visible = focused
     if focused
-        m.name.color = "0x16191EFF"
+        m.name.color = uiTint("0x16191EFF")
         m.name.font = uiFont("bold", 32)
     else
-        m.name.color = "0xEBEBEBFF"
+        m.name.color = uiTint("0xEBEBEBFF")
         m.name.font = uiSystemFont(36)
     end if
     ' On the accent box, an accent number is dark instead.
     if m.danger
-        m.countBack.color = "0xEB6B70FF"
-        m.count.color = "0x16191EFF"
+        m.countBack.color = uiTint("0xEB6B70FF")
+        m.count.color = uiTint("0x16191EFF")
     else if focused
-        m.countBack.color = "0x16191EFF"
-        m.count.color = "0x7DD3FCFF"
+        m.countBack.color = uiTint("0x16191EFF")
+        m.count.color = uiTint("0x7DD3FCFF")
     else
-        m.countBack.color = "0x38BDF8FF"
-        m.count.color = "0x16191EFF"
+        m.countBack.color = uiTint("0x38BDF8FF")
+        m.count.color = uiTint("0x16191EFF")
     end if
 end sub

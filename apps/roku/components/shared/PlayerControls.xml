@@ -56,6 +56,7 @@
     <script type="text/brightscript" uri="pkg:/components/lib/Http.brs" />
     <script type="text/brightscript" uri="pkg:/components/lib/Format.brs" />
     <script type="text/brightscript" uri="pkg:/components/shared/Type.brs" />
+    <script type="text/brightscript" uri="pkg:/components/shared/Colors.brs" />
     <children>
         <Group id="controls" opacity="0" visible="false">
             <Poster id="scrim" width="1920" height="1080" uri="pkg:/images/ui/scrim-player.png" />
@@ -78,7 +79,9 @@
             <Poster id="played" translation="[96, 846]" width="0" height="8" uri="pkg:/images/ui/bar.9.png" blendColor="0x38BDF8FF" />
             <Group id="gaps" />
             <Poster id="thumb" translation="[86, 840]" width="20" height="20" uri="pkg:/images/ui/thumb.png" blendColor="0xEBEBEBFF" />
-            <Poster id="thumbFocus" translation="[78, 832]" width="36" height="36" uri="pkg:/images/ui/thumb-focus.png" visible="false" />
+            <Poster id="thumbFocus" translation="[78, 832]" width="36" height="36" uri="pkg:/images/ui/thumb-focus.png" blendColor="0x7DD3FCFF" visible="false">
+                <Poster translation="[6, 6]" width="24" height="24" uri="pkg:/images/ui/circle.png" blendColor="0xEBEBEBFF" />
+            </Poster>
             <Label id="marker" translation="[96, 866]" horizAlign="center" color="0xA1A9B6FF" visible="false" />
             <!-- The seek preview, 480 × 270, its bottom at y 694, over the
                  thumb; the time under it and the chapter's name. -->
@@ -101,7 +104,9 @@
         <!-- Loading: an 80 px ring turning in the middle, what to say
              under it on the badge's backing. -->
         <Group id="buffering" visible="false">
-            <Poster id="ring" translation="[920, 500]" width="80" height="80" uri="pkg:/images/ui/buffering.png" scaleRotateCenter="[40, 40]" />
+            <Poster id="ring" translation="[920, 500]" width="80" height="80" uri="pkg:/images/ui/buffering.png" blendColor="0xEBEBEBFF" scaleRotateCenter="[40, 40]">
+                <Poster width="80" height="80" uri="pkg:/images/ui/buffering-arc.png" blendColor="0x38BDF8FF" />
+            </Poster>
             <Group id="bufferingNote" visible="false">
                 <Poster id="bufferingBack" uri="pkg:/images/ui/r12.9.png" blendColor="0x16191E99" height="56" />
                 <Label id="bufferingLabel" height="56" horizAlign="center" vertAlign="center" color="0xEBEBEBFF" />

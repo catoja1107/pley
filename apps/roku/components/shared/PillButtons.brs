@@ -42,7 +42,7 @@ sub onButtons()
         back.height = height
         edge = group.createChild("Poster")
         edge.uri = "pkg:/images/ui/edge.9.png"
-        edge.blendColor = "0x6C7584FF"
+        edge.blendColor = uiTint("0x6C7584FF")
         edge.width = width
         edge.height = height
         label = group.createChild("Label")
@@ -85,11 +85,11 @@ sub onLook()
         pill = m.pills[i]
         lit = focused and i = m.index
         if lit
-            pill.back.blendColor = "0x38BDF8FF"
-            pill.label.color = "0x16191EFF"
+            pill.back.blendColor = uiTint("0x38BDF8FF")
+            pill.label.color = uiTint("0x16191EFF")
         else
-            pill.back.blendColor = "0xEBEBEB1F"
-            pill.label.color = "0xEBEBEBFF"
+            pill.back.blendColor = uiTint("0xEBEBEB1F")
+            pill.label.color = uiTint("0xEBEBEBFF")
         end if
         pill.edge.visible = not lit
     end for

@@ -776,6 +776,7 @@ on a category goes into its rows, Left or Back comes out again.
   libraries, Always start as, and Manage your account on the web, whose
   address (the server's, and `/account`) OK shows with what is managed
   there.
+- **Appearance:** Theme and Accent color ([Appearance](#appearance)).
 - **Playback:** Quality, and Play the next episode by itself (a switch;
   Up Next counts down only while it is on).
 - **Server:** the server's name and address, and Switch server.
@@ -806,6 +807,43 @@ the profile; until the Roku knows, the start asks "Who's watching?". A
 profile since gone from the household (deleted, or another account's,
 signed in since) counts as Profile used last, as Settings then shows it.
 It is kept on the Roku for each server.
+
+### Appearance
+
+The app is drawn in the account's theme and accent, on all its devices
+([API.md](API.md#appearance)).
+
+- **Settings → Appearance:** Theme (Automatic, Dark, Light, Midnight,
+  Obsidian, Arctic) and Accent color (the theme's own, then Sky, Blue,
+  Emerald, Teal, Amber and Violet, each with its color in a circle before
+  its name). Automatic is Dark on a Roku, which has no light or dark of
+  its own; it names what it is ("Automatic (Dark)"), and the theme's own
+  accent names its color ("The theme's own (Blue)"). A choice is the
+  account's (`PUT /api/me/appearance`) and shows once the server has it.
+  A Pley from before themes (its profile names none, or the route answers
+  404 or 405) keeps it on the Roku instead, shown at once.
+- **A change** (here, or the account heard with another look as a profile
+  signs in) makes the screens again in it, as another language does: the
+  one on top at once, Settings back on the row chosen, those under it as
+  they show again, and the rail and the ready-to-watch card too. The
+  players play on in the look they started in.
+- **At a start** the app shows the look it showed last (registry section
+  `appearance`), never another while it waits, which would flash.
+- **The players** stay dark in the Light theme, as the picture under them
+  needs, with the accent: their controls, panels, banners and lists. In
+  the dark themes they take the theme's colors.
+- **What is on pictures** (a tile's quality badges, the skip button) is
+  dark under light words in every look, as the other apps draw it.
+- **How:** the screens are written in Dark's colors with sky, in their
+  markup and their code (`components/shared/Colors.brs`). The scene works
+  out what each of those colors becomes in the look shown
+  (`components/lib/Theme.brs`'s `themeTints`, its alpha kept) and walks
+  each screen it makes with it (`uiRecolor`), as it gives screens Pley's
+  type; a list's items walk themselves, and the code's colors go through
+  `uiTint`. Live TV's guide draws on pictures (TimeGrid takes no color),
+  so `images/guide/` has them for each theme and accent. The colors are
+  `packages/tv/test/fixtures/appearance.json`'s, which the unit tests hold
+  the app to, with every theme's and accent's words at WCAG AA contrast.
 
 ### Language
 
@@ -880,7 +918,7 @@ the unit tests run against it.
 | `components/MainScene.*` | The screen stack, the HTTP agent for pictures, sign-in when the server ends it, what the user's remotes cast here |
 | `components/MusicPlayer.*` | The music queue on the scene's Audio node |
 | `components/screens/` | One component per screen |
-| `components/shared/` | Screen helpers (`Ui.brs`), title actions (`Titles.brs`), the language's globe and panel |
+| `components/shared/` | Screen helpers (`Ui.brs`), the look's colors (`Colors.brs`), title actions (`Titles.brs`), the language's globe and panel |
 | `components/items/` | Tiles, rows, the player's skip button, the ready-to-watch card |
 | `components/tasks/ApiTask` | The only code that talks to the server |
 | `components/tasks/DiscoveryTask` | `pley?` to UDP port 7539 (`apps/server/src/discovery.rs`) |
@@ -927,7 +965,7 @@ Rules the code keeps:
   Roku's sockets have no TLS.
 - Settings and views are kept in registry sections: `playback`,
   `subtitleSync`, `libraryViews`, `liveViews`, `household`, `startAs`,
-  `requests`, `searches`, `language`.
+  `requests`, `searches`, `language`, `appearance`.
 - Sign-in asks for `library play playlists profiles`, and `requests
   approvals` when the server's metadata lists them in `scopes_supported`
   (an older server refuses scopes it doesn't know). A sign-in from before
@@ -977,7 +1015,7 @@ bun run check     # bsc's compile check, bslint, the unit tests (CI runs this)
 bun run smoke     # the whole app in brs-node, against a fake server
 bun run bench     # the list work timed in brs-node
 bun run preview   # the app in a browser, the keyboard as its remote
-bun run images    # the nine-patch focus, watched-mark and globe images
+bun run images    # the nine-patch focus, watched-mark, globe and guide images
 ```
 
 - **Preview** serves the app on http://127.0.0.1:8086/. Arrows, Enter
@@ -1011,7 +1049,9 @@ bun run images    # the nine-patch focus, watched-mark and globe images
   asks for a movie and three seasons from Discover, approves a request,
   opens a title from its ready-to-watch card on Home (which waited while
   the requests showed), chooses Español in Settings → Language for the
-  account (Home asked for again in it) and Automatic again, and checks
+  account (Home asked for again in it) and Automatic again, picks
+  Midnight, amber and then Light in Settings → Appearance (Home made
+  again in them) and Dark with its own accent again, and checks
   that a server
   without requests is asked nothing but the summary, and that one without
   categories (`404`) shows a library's collections as a grid that opens
@@ -1027,7 +1067,10 @@ bun run images    # the nine-patch focus, watched-mark and globe images
   tests), one fetch at a time, the odd dropped key, and no measure of a
   Roku's speed.
 - **Images:** `bun run images` runs `scripts/make_images.py` (Python
-  standard library). The pictures of the Android TV look (`images/ui`:
+  standard library), which also draws Live TV's guide for each theme and
+  accent (`images/guide/`) from the fixture's colors. The pictures are
+  white for the screens to tint, but for the players' scrims and the
+  rail's shadow. The pictures of the Android TV look (`images/ui`:
   Lucide's icons from the Android app's set, rounded boxes as nine-patch
   pictures, the scrubber's parts, the player's scrim) come from
   `bun scripts/render-roku-images.mjs` at the repository root, through a

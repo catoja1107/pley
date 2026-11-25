@@ -6,6 +6,7 @@ sub init()
     ' Pley's type where the markup names Roku's (a list's items are made
     ' after the scene restyled the screen).
     uiRestyle(m.top)
+    uiRecolor(m.top)
 end sub
 
 sub onLook()
@@ -20,8 +21,8 @@ sub onLook()
         m.label.width = textWidth
     end if
     m.back.width = textWidth + 36
-    m.back.color = m.top.color
-    m.fill.color = m.top.color
+    m.back.color = uiTint(m.top.color)
+    m.fill.color = uiTint(m.top.color)
     progress = m.top.progress
     shown = progress >= 0
     m.track.visible = shown

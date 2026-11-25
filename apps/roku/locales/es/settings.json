@@ -2,6 +2,7 @@
   "title": "Ajustes",
   "categories": {
     "profile": "Perfil",
+    "appearance": "Apariencia",
     "playback": "Reproducción",
     "server": "Servidor",
     "diagnostics": "Diagnóstico",
@@ -24,6 +25,30 @@
     "title": "Idioma",
     "automatic": "Automático ({{language}})",
     "tooOld": "Actualiza Pley en el servidor para guardar {{language}} en la cuenta."
+  },
+  "appearance": {
+    "theme": "Tema",
+    "accent": "Color de acento",
+    "automatic": "Automático ({{theme}})",
+    "automaticHint": "Claro u oscuro según cada teléfono o computadora, oscuro en una TV.",
+    "themeAccent": "El del tema ({{accent}})",
+    "themeAccentHint": "El color que va con el tema.",
+    "tooOld": "Actualiza Pley en el servidor para usar esta apariencia.",
+    "themes": {
+      "dark": "Oscuro",
+      "light": "Claro",
+      "midnight": "Medianoche",
+      "obsidian": "Obsidiana",
+      "arctic": "Ártico"
+    },
+    "accents": {
+      "sky": "Cielo",
+      "blue": "Azul",
+      "emerald": "Esmeralda",
+      "teal": "Verde azulado",
+      "amber": "Ámbar",
+      "violet": "Violeta"
+    }
   },
   "quality": "Calidad",
   "autoplay": "Siguiente episodio automático",

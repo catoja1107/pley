@@ -26,6 +26,7 @@ end sub
 sub onContent()
     item = m.top.itemContent
     if item = invalid then return
+    uiRecolorFor(item)
     m.progress = 0.0
     if item.hasField("progress") then m.progress = item.progress
     m.current = item.hasField("current") and item.current = true
@@ -74,15 +75,15 @@ sub onFocus()
     focused = m.top.itemHasFocus and m.top.listHasFocus
     m.mark.visible = focused
     if focused
-        m.back.color = "0x2E3440FF"
+        m.back.color = uiTint("0x2E3440FF")
     else if m.current
-        m.back.color = "0x38BDF826"
+        m.back.color = uiTint("0x38BDF826")
     else
-        m.back.color = "0x16191E00"
+        m.back.color = uiTint("0x16191E00")
     end if
     if m.current
-        m.title.color = "0x7DD3FCFF"
+        m.title.color = uiTint("0x7DD3FCFF")
     else
-        m.title.color = "0xEBEBEBFF"
+        m.title.color = uiTint("0xEBEBEBFF")
     end if
 end sub

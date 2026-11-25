@@ -17,6 +17,7 @@ sub init()
     ' Pley's type where the markup names Roku's (a list's items are made
     ' after the scene restyled the screen).
     uiRestyle(m.top)
+    uiRecolor(m.top)
 end sub
 
 sub onLogo()
@@ -87,10 +88,10 @@ end sub
 sub onFocus()
     focused = m.top.itemHasFocus and m.top.rowHasFocus and m.top.rowListHasFocus and m.top.gridHasFocus
     if focused
-        m.frame.color = "0x38BDF8FF"
-        m.title.color = "0x7DD3FCFF"
+        m.frame.color = uiTint("0x38BDF8FF")
+        m.title.color = uiTint("0x7DD3FCFF")
     else
-        m.frame.color = "0x262B35FF"
-        m.title.color = "0xEBEBEBFF"
+        m.frame.color = uiTint("0x262B35FF")
+        m.title.color = uiTint("0xEBEBEBFF")
     end if
 end sub

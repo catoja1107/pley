@@ -2471,7 +2471,9 @@ sub showMenuChoices(items as object, current as integer)
     for i = 0 to items.Count() - 1
         items[i].checked = i = current
     end for
-    m.menuList.content = nodesContent(items)
+    menu = nodesContent(items)
+    uiPlayerContent(menu)
+    m.menuList.content = menu
     at = current
     if at < 0 then at = 0
     m.menuList.jumpToItem = at
@@ -2894,7 +2896,9 @@ sub onSubtitlesFound(event as object)
     for each result in m.found
         items.Push({ title: result.label, description: result.hint })
     end for
-    m.menuList.content = nodesContent(items)
+    menu = nodesContent(items)
+    uiPlayerContent(menu)
+    m.menuList.content = menu
     if m.found.Count() > 0
         m.menuList.jumpToItem = 1
         m.menuHint.text = ""

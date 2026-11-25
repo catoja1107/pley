@@ -10,6 +10,7 @@ sub init()
     ' Pley's type where the markup names Roku's (a list's items are made
     ' after the scene restyled the screen).
     uiRestyle(m.top)
+    uiRecolor(m.top)
     m.title.font = uiType("bodyLarge")
     m.subtitle.font = uiType("body")
     m.number.font = uiType("body")
@@ -36,12 +37,12 @@ sub onFocus()
     m.bar.visible = focused
     m.background.visible = focused or m.isCurrent
     if focused
-        m.background.color = "0x2E3440FF"
-        m.title.color = "0x7DD3FCFF"
+        m.background.color = uiTint("0x2E3440FF")
+        m.title.color = uiTint("0x7DD3FCFF")
     else
-        m.background.color = "0x1E222AFF"
-        m.title.color = "0xEBEBEBFF"
-        if m.isCurrent then m.title.color = "0x38BDF8FF"
+        m.background.color = uiTint("0x1E222AFF")
+        m.title.color = uiTint("0xEBEBEBFF")
+        if m.isCurrent then m.title.color = uiTint("0x38BDF8FF")
     end if
 end sub
 

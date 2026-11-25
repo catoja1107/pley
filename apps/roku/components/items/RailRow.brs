@@ -9,6 +9,7 @@ sub init()
     m.initial = m.top.findNode("initial")
     m.current = false
     m.danger = false
+    uiRecolor(m.top)
 end sub
 
 sub onContent()
@@ -89,36 +90,36 @@ sub onFocus()
     if w <= 0 then w = 456
     if focused
         m.pill.visible = true
-        m.pill.blendColor = "0x38BDF8FF"
+        m.pill.blendColor = uiTint("0x38BDF8FF")
         m.pill.width = w - 48
         m.pill.translation = [24, 0]
-        m.icon.blendColor = "0x16191EFF"
-        m.name.color = "0x16191EFF"
+        m.icon.blendColor = uiTint("0x16191EFF")
+        m.name.color = uiTint("0x16191EFF")
     else if m.current and open
         m.pill.visible = true
-        m.pill.blendColor = "0x2E3440FF"
+        m.pill.blendColor = uiTint("0x2E3440FF")
         m.pill.width = w - 48
         m.pill.translation = [24, 0]
-        m.icon.blendColor = "0xEBEBEBFF"
-        m.name.color = "0xEBEBEBFF"
+        m.icon.blendColor = uiTint("0xEBEBEBFF")
+        m.name.color = uiTint("0xEBEBEBFF")
     else
         m.pill.visible = false
-        m.name.color = "0xEBEBEBFF"
+        m.name.color = uiTint("0xEBEBEBFF")
         if m.current
-            m.icon.blendColor = "0xEBEBEBFF"
+            m.icon.blendColor = uiTint("0xEBEBEBFF")
         else
-            m.icon.blendColor = "0xA1A9B6FF"
+            m.icon.blendColor = uiTint("0xA1A9B6FF")
         end if
     end if
     ' On the accent pill, an accent number is dark instead.
     if m.danger
-        m.countBack.blendColor = "0xEB6B70FF"
-        m.count.color = "0x16191EFF"
+        m.countBack.blendColor = uiTint("0xEB6B70FF")
+        m.count.color = uiTint("0x16191EFF")
     else if focused
-        m.countBack.blendColor = "0x16191EFF"
-        m.count.color = "0x7DD3FCFF"
+        m.countBack.blendColor = uiTint("0x16191EFF")
+        m.count.color = uiTint("0x7DD3FCFF")
     else
-        m.countBack.blendColor = "0x38BDF8FF"
-        m.count.color = "0x16191EFF"
+        m.countBack.blendColor = uiTint("0x38BDF8FF")
+        m.count.color = uiTint("0x16191EFF")
     end if
 end sub

@@ -8,6 +8,11 @@ describes how they are made.
 
 ## [Unreleased]
 
+### Added
+
+- Settings → Appearance picks the theme (Dark, Light, Midnight, Obsidian or
+  Arctic) and the accent color, kept for the account on all its devices.
+
 ### Fixed
 
 - The player's Playback details scroll with Up and Down, as on Android TV:

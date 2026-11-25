@@ -14,6 +14,8 @@ end sub
 sub onContent()
     item = m.top.itemContent
     if item = invalid then return
+    ' Live TV's and the live player's: the item knows whose by its content.
+    uiRecolorFor(item)
     m.inner = item.inner = true
     m.current = item.current = true
     m.heading = item.heading = true
@@ -57,25 +59,25 @@ end sub
 
 sub onFocus()
     if m.heading
-        m.back.color = "0x16191E00"
-        m.title.color = "0x8B95A5FF"
+        m.back.color = uiTint("0x16191E00")
+        m.title.color = uiTint("0x8B95A5FF")
         return
     end if
     focused = m.top.itemHasFocus and m.top.listHasFocus
     if focused
-        m.back.color = "0x38BDF8FF"
-        m.title.color = "0x16191EFF"
-        m.count.color = "0x16191EFF"
-        m.mark.color = "0x16191EFF"
+        m.back.color = uiTint("0x38BDF8FF")
+        m.title.color = uiTint("0x16191EFF")
+        m.count.color = uiTint("0x16191EFF")
+        m.mark.color = uiTint("0x16191EFF")
         return
     end if
     if m.current
-        m.back.color = "0x38BDF826"
-        m.title.color = "0x7DD3FCFF"
+        m.back.color = uiTint("0x38BDF826")
+        m.title.color = uiTint("0x7DD3FCFF")
     else
-        m.back.color = "0x16191E00"
-        m.title.color = "0xA1A9B6FF"
+        m.back.color = uiTint("0x16191E00")
+        m.title.color = uiTint("0xA1A9B6FF")
     end if
-    m.count.color = "0x8B95A5FF"
-    m.mark.color = "0x8B95A5FF"
+    m.count.color = uiTint("0x8B95A5FF")
+    m.mark.color = uiTint("0x8B95A5FF")
 end sub
