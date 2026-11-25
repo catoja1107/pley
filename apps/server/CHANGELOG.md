@@ -9,6 +9,12 @@ describes how they are made.
 
 ## [Unreleased]
 
+### Added
+
+- Each account keeps a theme (System, Dark, Light, Midnight, Obsidian or
+  Arctic) and an accent color, which the apps that offer them show on all
+  its devices.
+
 ## [0.1.17] - 2026-11-25
 
 ### Added

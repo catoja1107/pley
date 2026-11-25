@@ -1,0 +1,129 @@
+{
+  "themes": ["system", "dark", "light", "midnight", "obsidian", "arctic"],
+  "defaultTheme": "dark",
+  "systemWithoutSetting": "dark",
+  "accents": ["sky", "blue", "emerald", "teal", "amber", "violet"],
+  "themeAccents": {
+    "dark": "sky",
+    "light": "sky",
+    "midnight": "blue",
+    "obsidian": "emerald",
+    "arctic": "teal"
+  },
+  "palettes": {
+    "tv": {
+      "themes": {
+        "dark": {
+          "bg": "16191E",
+          "surface": "1E222A",
+          "surface2": "262B35",
+          "surface3": "2E3440",
+          "fg": "EBEBEB",
+          "muted": "A1A9B6",
+          "subtle": "8B95A5",
+          "edge": "6C7584",
+          "faint": "4B5261",
+          "danger": "EB6B70",
+          "success": "3FB27F",
+          "warning": "E8B04B",
+          "info": "4C9AFF",
+          "scrim": "000000"
+        },
+        "light": {
+          "bg": "E6E8EC",
+          "surface": "EEF0F3",
+          "surface2": "DCE0E6",
+          "surface3": "CDD3DC",
+          "fg": "17191D",
+          "muted": "4A5262",
+          "subtle": "586170",
+          "edge": "767F8D",
+          "faint": "ACB3BE",
+          "danger": "B4262F",
+          "success": "15704A",
+          "warning": "875700",
+          "info": "1F5CC8",
+          "scrim": "E6E8EC"
+        },
+        "midnight": {
+          "bg": "101522",
+          "surface": "171F30",
+          "surface2": "202B40",
+          "surface3": "2B3954",
+          "fg": "EBEBEB",
+          "muted": "AAB5C8",
+          "subtle": "8D9AB2",
+          "edge": "5E6F90",
+          "faint": "3D4B68",
+          "danger": "EB6B70",
+          "success": "3FB27F",
+          "warning": "E8B04B",
+          "info": "4C9AFF",
+          "scrim": "000000"
+        },
+        "obsidian": {
+          "bg": "101311",
+          "surface": "171E19",
+          "surface2": "1F2822",
+          "surface3": "2A3630",
+          "fg": "EBEBEB",
+          "muted": "A8B4AA",
+          "subtle": "8C9A8F",
+          "edge": "607166",
+          "faint": "3F4D44",
+          "danger": "EB6B70",
+          "success": "3FB27F",
+          "warning": "E8B04B",
+          "info": "4C9AFF",
+          "scrim": "000000"
+        },
+        "arctic": {
+          "bg": "101419",
+          "surface": "131F26",
+          "surface2": "1A2A33",
+          "surface3": "24363F",
+          "fg": "EBEBEB",
+          "muted": "9AB0B9",
+          "subtle": "819AA4",
+          "edge": "56717C",
+          "faint": "384B53",
+          "danger": "EB6B70",
+          "success": "3FB27F",
+          "warning": "E8B04B",
+          "info": "4C9AFF",
+          "scrim": "000000"
+        }
+      },
+      "accents": {
+        "sky": { "dark": { "accent": "38BDF8", "accentBright": "7DD3FC" }, "light": { "accent": "0369A1", "accentBright": "075985" } },
+        "blue": { "dark": { "accent": "70A5FF", "accentBright": "A9C8FF" }, "light": { "accent": "2458C8", "accentBright": "1D47A6" } },
+        "emerald": { "dark": { "accent": "4CCB83", "accentBright": "8BE3B1" }, "light": { "accent": "1F6B44", "accentBright": "1D5A3A" } },
+        "teal": { "dark": { "accent": "48E0E5", "accentBright": "8DEFF1" }, "light": { "accent": "006A71", "accentBright": "005A60" } },
+        "amber": { "dark": { "accent": "F2B65F", "accentBright": "F8D08F" }, "light": { "accent": "8A4F0C", "accentBright": "74420A" } },
+        "violet": { "dark": { "accent": "C18AFF", "accentBright": "D8B9FF" }, "light": { "accent": "6E3FD0", "accentBright": "5A2FB0" } }
+      }
+    }
+  },
+  "contrast": [
+    ["fg", "bg", 7],
+    ["fg", "surface", 7],
+    ["fg", "surface2", 7],
+    ["fg", "surface3", 7],
+    ["muted", "bg", 4.5],
+    ["muted", "surface", 4.5],
+    ["muted", "surface2", 4.5],
+    ["muted", "surface3", 4.5],
+    ["subtle", "bg", 4.5],
+    ["subtle", "surface", 4.5],
+    ["subtle", "surface2", 4.5],
+    ["edge", "bg", 3],
+    ["accent", "onAccent", 4.5],
+    ["accent", "bg", 4.5],
+    ["accentBright", "bg", 4.5],
+    ["accentBright", "surface3", 4.5],
+    ["danger", "bg", 4.5],
+    ["success", "bg", 4.5],
+    ["success", "surface2", 4.5],
+    ["warning", "bg", 4.5]
+  ]
+}

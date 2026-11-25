@@ -230,6 +230,8 @@ interface User {
   subtitle_language: string | null; // null = the audio language
   subtitle_mode: "off" | "forced" | "foreign" | "always";
   language: "en" | "fr" | "es" | "zh-CN" | "zh-TW" | null; // the language Pley is in for the account; null = automatic (see Language)
+  theme: "system" | "dark" | "light" | "midnight" | "obsidian" | "arctic"; // "dark" until chosen (see Appearance)
+  accent: "sky" | "blue" | "emerald" | "teal" | "amber" | "violet" | null; // null = the theme's own
   has_password: boolean;            // false: a managed profile, or an account without a password
   two_step: boolean;                // two-step sign-in is on
   request_access: "off" | "ask" | "auto"; // Requests: may not ask, asks an administrator, or approved as
@@ -686,9 +688,10 @@ it of every account with a password (`require_two_step` in the
 
 | Method | Path | Who | What |
 |---|---|---|---|
-| PATCH | `/api/me` | `user` | `{ display_name?, avatar_color?, audio_language?, subtitle_language?, subtitle_mode?, language? }` (`null` clears) → `User` |
+| PATCH | `/api/me` | `user` | `{ display_name?, avatar_color?, audio_language?, subtitle_language?, subtitle_mode?, language?, theme?, accent? }` (`null` clears) → `User` |
 | PUT | `/api/me/track-defaults` | `play` | `{ audio_language?, subtitle_language?, subtitle_mode? }` → the profile as [`GET /api/auth/me`](#auth) shows it |
 | PUT | `/api/me/language` | `play` | `{ language }` (`"en"`, `"fr"`, `"es"`, `"zh-CN"`, `"zh-TW"`, or `null` for the server's) → the profile as [`GET /api/auth/me`](#auth) shows it |
+| PUT | `/api/me/appearance` | `play` | `{ theme?, accent? }` ([Appearance](#appearance); a field left out is `null`) → the profile as [`GET /api/auth/me`](#auth) shows it |
 | PUT | `/api/me/pin` | `user` | `{ pin: string \| null, password }` → `204`. 4–8 digits; `null` removes it; `403` for a wrong password, and for a managed profile (an administrator sets its PIN) |
 | PUT | `/api/me/avatar` | `user` | raw image bytes (JPEG, PNG, WebP, GIF, BMP; ≤ 10 MB) → `User`. Stored as a 256 px square JPEG |
 | DELETE | `/api/me/avatar` | `user` | `204` |
@@ -752,6 +755,37 @@ picked with the globe in its window isn't one they see. The tray of a
 server on a desktop is in the server language once an administrator has
 chosen one, else the desktop's; its menu takes a new one when Pley starts
 again (on Linux, the next time it opens).
+
+## Appearance
+
+Each account picks how the apps look for it, on all its devices: a theme
+and an accent. `User.theme` is one of:
+
+| Theme | What it is |
+|---|---|
+| `system` | Light or Dark, as the device's own setting is; Dark where the device has none (TVs) |
+| `dark` | Pley's charcoal, as it always looked: the default, for an account that chose none |
+| `light` | Light backgrounds and dark text |
+| `midnight` | Deep navy |
+| `obsidian` | Black with a green cast |
+| `arctic` | Charcoal with a teal cast |
+
+`User.accent` is the color that marks focus, selection and the main
+buttons over it: `sky`, `blue`, `emerald`, `teal`, `amber`, `violet`, or
+`null` for the theme's own (sky for Dark and Light, blue for Midnight,
+emerald for Obsidian, teal for Arctic). The web sets them with `PATCH
+/api/me` (`{ "theme": "midnight" }`, either alone), an app with `PUT
+/api/me/appearance` (both at once); any other value is `400`, and `null`
+goes back to the default. A stored value the server no longer offers
+reads as none chosen.
+
+Each app draws a theme in its own colors, within what its screens allow
+(Roku's whites, for one, stay broadcast-safe), but every app's text keeps
+WCAG AA contrast in every theme with every accent: 4.5:1 for words, 3:1
+for outlines. The TV apps' colors are pinned by
+`packages/tv/test/fixtures/appearance.json`, whose `contrast` list the
+apps' tests check them against. The players stay dark in the Light theme,
+as the picture under them needs, and take the accent.
 
 ## Compatibility tokens
 
