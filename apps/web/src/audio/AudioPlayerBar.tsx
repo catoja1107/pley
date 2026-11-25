@@ -75,7 +75,7 @@ function QueuePopover() {
               aria-current={i === player.index ? "true" : undefined}
               onClick={() => player.jumpTo(i)}
               className={cn(
-                "flex w-full items-center gap-3 px-4 py-1.5 text-left text-sm transition-colors hover:bg-white/5",
+                "flex w-full items-center gap-3 px-4 py-1.5 text-left text-sm transition-colors hover:bg-ink/5",
                 i === player.index && "text-accent",
               )}
             >
@@ -120,7 +120,7 @@ export function AudioPlayerBar() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/95 backdrop-blur-md lg:left-60">
       {/* Mobile progress line */}
-      <div className="h-0.5 bg-white/10 md:hidden">
+      <div className="h-0.5 bg-ink/10 md:hidden">
         <div className="h-full bg-accent" style={{ width: `${length ? (at / length) * 100 : 0}%` }} />
       </div>
       <div className="flex h-[76px] items-center gap-3 px-3 sm:px-5">

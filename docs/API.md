@@ -785,7 +785,10 @@ WCAG AA contrast in every theme with every accent: 4.5:1 for words, 3:1
 for outlines. The TV apps' colors are pinned by
 `packages/tv/test/fixtures/appearance.json`, whose `contrast` list the
 apps' tests check them against. The players stay dark in the Light theme,
-as the picture under them needs, and take the accent.
+as the picture under them needs, and take the accent. The web app starts
+in the look of the device's last visit, so nothing flashes, then shows the
+account's; on a server from before themes it keeps one picked in
+Account → Appearance on the device.
 
 ## Compatibility tokens
 

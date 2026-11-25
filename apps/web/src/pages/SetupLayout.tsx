@@ -25,7 +25,7 @@ export function SetupLayout() {
           <Logo className="h-10" />
         </div>
         <div className="animate-pop-in overflow-hidden rounded-xl border border-border bg-surface/90 shadow-2xl shadow-black/50 backdrop-blur">
-          <ProgressBar value={progress} label={t("setup.progress")} className="rounded-none bg-white/5" barClassName="rounded-none duration-500" />
+          <ProgressBar value={progress} label={t("setup.progress")} className="rounded-none bg-ink/5" barClassName="rounded-none duration-500" />
           <div className="p-6 sm:p-8">
             <SetupFrameContext.Provider value={frame}>
               {/* A step comes in over the last; the card stays. */}

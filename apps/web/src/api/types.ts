@@ -41,6 +41,10 @@ export interface User {
   subtitle_mode: SubtitleMode;
   /** The language Pley is in for this account (`en`, `fr`, `es`); `null`: automatic (the device's, else the server language). Absent from servers before it. */
   language?: string | null;
+  /** The theme the apps are drawn in for this account ("dark" until chosen). Absent from servers before themes. */
+  theme?: string;
+  /** The accent over it; `null`: the theme's own. Absent from servers before themes. */
+  accent?: string | null;
   /** `false`: a managed profile, or an account without a password. */
   has_password: boolean;
   /** Signs in with a code from an authenticator app after the password. */
@@ -67,6 +71,10 @@ export interface ProfilePatch {
   subtitle_mode?: SubtitleMode;
   /** `null`: automatic. */
   language?: string | null;
+  /** `null`: dark. */
+  theme?: string | null;
+  /** `null`: the theme's own. */
+  accent?: string | null;
 }
 
 /** A signed-in session (browser, app). */

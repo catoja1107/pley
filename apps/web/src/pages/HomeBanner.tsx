@@ -127,9 +127,9 @@ export function HomeBanner({ featured }: { featured: Featured[] }) {
       ))}
 
       {/* Shades that keep the words and the top bar readable on any picture, and melt it into the page. */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-linear-to-b from-black/65 to-transparent" />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-linear-to-b from-paper/65 to-transparent" />
       {/* Phones put the words in the middle of the picture, where only a dimmer picture keeps them readable. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/25 sm:hidden" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-paper/25 sm:hidden" />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-y-0 left-0 hidden w-[78%] bg-linear-to-r from-bg/95 via-bg/60 to-transparent sm:block"
@@ -154,13 +154,13 @@ export function HomeBanner({ featured }: { featured: Featured[] }) {
               >
                 <span
                   className={cn(
-                    "relative block h-1 overflow-hidden rounded-full bg-white/25 transition-[width,background-color] duration-500 group-hover/turn:bg-white/50",
+                    "relative block h-1 overflow-hidden rounded-full bg-ink/25 transition-[width,background-color] duration-500 group-hover/turn:bg-ink/50",
                     i === at ? "w-10" : "w-4",
                   )}
                 >
                   {i === at ? (
                     <span
-                      className={cn("absolute inset-0 origin-left rounded-full bg-white", rotating && "animate-hero-turn")}
+                      className={cn("absolute inset-0 origin-left rounded-full bg-ink", rotating && "animate-hero-turn")}
                       style={rotating ? { animationDuration: `${TURN_MS}ms`, animationPlayState: paused ? "paused" : "running" } : undefined}
                       onAnimationEnd={() => go(at + 1)}
                     />
@@ -193,12 +193,12 @@ function Slide({ featured: { item, from } }: { featured: Featured }) {
 
   return (
     <div className="max-w-2xl min-w-0 animate-hero-rise text-center sm:text-left">
-      <div className="mb-3 flex items-center justify-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/85 [text-shadow:0_1px_8px_rgb(0_0_0/0.6)] sm:mb-4 sm:justify-start sm:text-xs">
+      <div className="mb-3 flex items-center justify-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink/85 [text-shadow:0_1px_8px_color-mix(in_srgb,var(--color-paper)_60%,transparent)] sm:mb-4 sm:justify-start sm:text-xs">
         {from === "list" ? t("home.banner.onMyList") : library ? t("home.banner.newIn", { library }) : t("home.banner.new")}
       </div>
       <h2
         className={cn(
-          "font-extrabold leading-[1.05] tracking-[-0.025em] text-white [text-shadow:0_2px_24px_rgb(0_0_0/0.45)] [text-wrap:balance]",
+          "font-extrabold leading-[1.05] tracking-[-0.025em] text-ink [text-shadow:0_2px_24px_color-mix(in_srgb,var(--color-paper)_45%,transparent)] [text-wrap:balance]",
           size,
         )}
       >
@@ -208,7 +208,7 @@ function Slide({ featured: { item, from } }: { featured: Featured }) {
       </h2>
       <Details item={item} detail={detail} />
       {detail?.summary ? (
-        <p className="mx-auto mt-3 line-clamp-2 max-w-xl text-sm leading-relaxed sm:mt-4 text-white/80 sm:mx-0 sm:line-clamp-3 sm:text-base">
+        <p className="mx-auto mt-3 line-clamp-2 max-w-xl text-sm leading-relaxed sm:mt-4 text-ink/80 sm:mx-0 sm:line-clamp-3 sm:text-base">
           {detail.summary}
         </p>
       ) : null}
@@ -216,18 +216,18 @@ function Slide({ featured: { item, from } }: { featured: Featured }) {
         <button
           type="button"
           onClick={() => void play(item)}
-          className="inline-flex h-12 items-center gap-2 whitespace-nowrap rounded-md bg-white px-4 sm:gap-2.5 text-[15px] font-semibold text-black shadow-lg shadow-black/30 transition hover:bg-white/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.98] sm:px-7 sm:text-base"
+          className="inline-flex h-12 items-center gap-2 whitespace-nowrap rounded-md bg-ink px-4 sm:gap-2.5 text-[15px] font-semibold text-paper shadow-lg shadow-black/30 transition hover:bg-ink/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.98] sm:px-7 sm:text-base"
         >
           <Play className="size-5 fill-current" aria-hidden />
           {resume ? t("common:actions.resume") : t("common:actions.play")}
           {/* Not on phones, where it crowds the buttons and Continue Watching just below says it too. */}
           {resume ? (
-            <span className="hidden font-normal text-black/60 sm:inline">{formatRemaining(item.user_state.position_ms, item.duration_ms)}</span>
+            <span className="hidden font-normal text-paper/60 sm:inline">{formatRemaining(item.user_state.position_ms, item.duration_ms)}</span>
           ) : null}
         </button>
         <Link
           to={itemUrl(item.id)}
-          className="inline-flex h-12 items-center gap-2 whitespace-nowrap rounded-md bg-white/15 px-4 sm:gap-2.5 text-[15px] font-semibold text-white ring-1 ring-white/15 backdrop-blur-md transition hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-6 sm:text-base"
+          className="inline-flex h-12 items-center gap-2 whitespace-nowrap rounded-md bg-ink/15 px-4 sm:gap-2.5 text-[15px] font-semibold text-ink ring-1 ring-ink/15 backdrop-blur-md transition hover:bg-ink/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-6 sm:text-base"
         >
           <Info className="size-5" aria-hidden />
           {t("home.banner.moreInfo")}
@@ -257,11 +257,11 @@ function Details({ item, detail }: { item: Featured["item"]; detail: ItemDetail 
   ].filter((p) => p != null && p !== "");
   // Centered on phones, so dots go between the facts rather than before each (as MetaLine does).
   return (
-    <div className="mt-4 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-sm text-white/85 sm:justify-start sm:text-[15px]">
+    <div className="mt-4 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-sm text-ink/85 sm:justify-start sm:text-[15px]">
       {parts.map((part, i) => (
         <Fragment key={i}>
           {i > 0 ? (
-            <span aria-hidden className="text-white/40">
+            <span aria-hidden className="text-ink/40">
               ·
             </span>
           ) : null}
@@ -285,7 +285,7 @@ function ListButton({ item }: { item: ItemDetail }) {
       aria-pressed={inList}
       title={label}
       onClick={() => setInWatchlist.mutate({ item, on: !inList }, { onError: (e) => toast.error(errorMessage(e)) })}
-      className="flex size-10 shrink-0 items-center justify-center rounded-full border-[1.5px] border-white/40 bg-black/25 text-white backdrop-blur-md transition hover:border-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="flex size-10 shrink-0 items-center justify-center rounded-full border-[1.5px] border-ink/40 bg-paper/25 text-ink backdrop-blur-md transition hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       {inList ? <Check className="size-[18px] text-accent" strokeWidth={2.5} aria-hidden /> : <Plus className="size-[18px]" strokeWidth={2.5} aria-hidden />}
     </button>

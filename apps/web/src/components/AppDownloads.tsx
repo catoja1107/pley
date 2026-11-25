@@ -132,7 +132,7 @@ export function AppDownloads() {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={percent ? `${label}, ${percent}` : label}
-        className="flex h-9 items-center gap-2 rounded-full px-3 text-muted transition-colors hover:bg-white/5 hover:text-fg"
+        className="flex h-9 items-center gap-2 rounded-full px-3 text-muted transition-colors hover:bg-ink/5 hover:text-fg"
       >
         <Ring fraction={fraction} />
         <span className="hidden max-w-48 truncate text-xs font-medium md:inline">{label}</span>
@@ -146,7 +146,7 @@ export function AppDownloads() {
           {active.map((d) => (
             <div key={d.id} className="space-y-1.5">
               <div className="truncate text-sm font-medium text-fg">{d.name}</div>
-              <div className="h-1 overflow-hidden rounded-full bg-white/10">
+              <div className="h-1 overflow-hidden rounded-full bg-ink/10">
                 <div
                   className={cn(
                     "h-full rounded-full transition-[width] duration-500 motion-reduce:transition-none",

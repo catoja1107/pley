@@ -31,8 +31,8 @@ export function Slider({ value, max, onCommit, onPreview, buffered, label, value
 
   return (
     <div className={cn("group/slider relative flex h-5 items-center", className)}>
-      <div className="relative h-1 w-full overflow-hidden rounded-full bg-white/15 transition-[height] duration-150 group-hover/slider:h-1.5">
-        {buffered != null ? <div className="absolute inset-y-0 left-0 bg-white/25" style={{ width: `${bufPct}%` }} /> : null}
+      <div className="relative h-1 w-full overflow-hidden rounded-full bg-ink/15 transition-[height] duration-150 group-hover/slider:h-1.5">
+        {buffered != null ? <div className="absolute inset-y-0 left-0 bg-ink/25" style={{ width: `${bufPct}%` }} /> : null}
         <div className="absolute inset-y-0 left-0 rounded-full bg-accent" style={{ width: `${pct}%` }} />
       </div>
       <div

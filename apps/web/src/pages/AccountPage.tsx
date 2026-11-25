@@ -46,6 +46,7 @@ import { LANGUAGES } from "@/lib/languages";
 import { useDocumentTitle } from "@/lib/hooks";
 import { passwordProblem } from "@/lib/passwords";
 import { LanguageCard } from "./LanguageCard";
+import { AppearanceCard } from "./AppearanceCard";
 import { CompatibilityTokensCard } from "./CompatibilityTokensCard";
 import { TwoStepCard } from "./TwoStepCard";
 
@@ -502,7 +503,7 @@ function DevicesCard() {
       ) : devices.isError ? (
         <p className="text-sm text-danger">{errorMessage(devices.error)}</p>
       ) : (
-        <ul className="divide-y divide-white/[0.05] rounded-md border border-border">
+        <ul className="divide-y divide-ink/[0.05] rounded-md border border-border">
           {list.map((d) => {
             const Icon = deviceIcon(d);
             return (
@@ -576,7 +577,7 @@ function AppsCard() {
       ) : list.length === 0 ? (
         <p className="text-sm text-subtle">{t("account.apps.none")}</p>
       ) : (
-        <ul className="divide-y divide-white/[0.05] rounded-md border border-border">
+        <ul className="divide-y divide-ink/[0.05] rounded-md border border-border">
           {list.map((a) => {
             const label = appLabel(a);
             return (
@@ -662,6 +663,7 @@ export function AccountPage() {
       </div>
       <ProfileCard key={user.id} />
       <LanguageCard />
+      <AppearanceCard />
       <PlaybackCard />
       <PinCard />
       {user.managed ? null : user.has_password === false ? <NoPasswordCard /> : <PasswordCard />}

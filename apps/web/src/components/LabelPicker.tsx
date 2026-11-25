@@ -110,14 +110,14 @@ export function LabelPicker({
         {value.map((label) => (
           <span
             key={label}
-            className="inline-flex items-center gap-1 rounded bg-white/10 py-0.5 pl-2 pr-0.5 text-xs font-semibold text-fg/90"
+            className="inline-flex items-center gap-1 rounded bg-ink/10 py-0.5 pl-2 pr-0.5 text-xs font-semibold text-fg/90"
           >
             {label}
             <button
               type="button"
               aria-label={removeLabel(label)}
               onClick={() => onChange(value.filter((v) => v !== label))}
-              className="rounded p-0.5 text-subtle hover:bg-white/10 hover:text-fg"
+              className="rounded p-0.5 text-subtle hover:bg-ink/10 hover:text-fg"
             >
               <X className="size-3" />
             </button>
@@ -170,7 +170,7 @@ export function LabelPicker({
                 onClick={() => add(choice.label)}
                 className={cn(
                   "flex cursor-pointer items-center justify-between gap-3 px-3 py-1.5 text-sm text-fg",
-                  i === current && "bg-white/10",
+                  i === current && "bg-ink/10",
                 )}
               >
                 {choice.items === undefined ? (

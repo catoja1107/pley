@@ -143,7 +143,7 @@ export const MediaCard = memo(function MediaCard({
         <Link
           to={to}
           className={cn(
-            "relative block overflow-hidden bg-surface-2 outline-none ring-1 ring-white/5 transition duration-200 hover:ring-2 hover:ring-accent focus-visible:ring-2 focus-visible:ring-accent",
+            "relative block overflow-hidden bg-surface-2 outline-none ring-1 ring-ink/5 transition duration-200 hover:ring-2 hover:ring-accent focus-visible:ring-2 focus-visible:ring-accent",
             round ? "rounded-full" : "rounded-md",
           )}
           aria-label={name}

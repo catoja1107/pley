@@ -61,6 +61,30 @@
     "serverLabel": "Pley's language",
     "choose": "Choose a language"
   },
+  "appearance": {
+    "label": "Appearance",
+    "accountHint": "How Pley looks for you, on every device you sign in on. Automatic follows each device's light or dark setting.",
+    "deviceHint": "How Pley looks on this device. Update Pley on the server to keep it for your account.",
+    "theme": "Theme",
+    "accent": "Accent color",
+    "automatic": "Automatic ({{theme}})",
+    "themeAccent": "The theme's own ({{accent}})",
+    "themes": {
+      "dark": "Dark",
+      "light": "Light",
+      "midnight": "Midnight",
+      "obsidian": "Obsidian",
+      "arctic": "Arctic"
+    },
+    "accents": {
+      "sky": "Sky",
+      "blue": "Blue",
+      "emerald": "Emerald",
+      "teal": "Teal",
+      "amber": "Amber",
+      "violet": "Violet"
+    }
+  },
   "format": {
     "never": "never",
     "seconds": "{{n}}s",

@@ -363,7 +363,7 @@ const GuideRow = memo(function GuideRow({
       <div className="relative flex-1">
         {visible.length === 0 && loaded ? (
           <div
-            className="absolute inset-y-1 flex items-center rounded-md bg-white/[0.02] px-3 text-xs text-subtle"
+            className="absolute inset-y-1 flex items-center rounded-md bg-ink/[0.02] px-3 text-xs text-subtle"
             style={{ left: Math.max(0, (viewFrom - start) * pxPerSec) + 2, width: Math.max(0, (viewTo - viewFrom) * pxPerSec) - 4 }}
           >
             {channel.has_guide ? t("guide.noInformation") : <span className="truncate text-muted">{channelName(channel, category)}</span>}

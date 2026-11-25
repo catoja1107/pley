@@ -19,6 +19,7 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
+import { useDarkLook } from "@/appearance";
 import { errorMessage, isApiError } from "@/api/client";
 import { onServerEvent } from "@/api/events";
 import { fetchNext, invalidateWatchState, keys, useTrickplay } from "@/api/hooks";
@@ -280,6 +281,8 @@ function newAuto(file: MediaFile, afresh: boolean): AutoQuality {
 
 export function VideoPlayer({ item, startMs, fileId, audio: initialAudio, sub: initialSub, queue }: VideoPlayerProps) {
   const { t } = useTranslation(["player", "common"]);
+  // Dark in the Light theme, as the picture needs (appearance/).
+  const dark = useDarkLook();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const toast = useToast();
@@ -1985,6 +1988,7 @@ export function VideoPlayer({ item, startMs, fileId, audio: initialAudio, sub: i
   return (
     <div
       ref={containerRef}
+      style={dark}
       className={cn("fixed inset-0 z-50 select-none overflow-hidden bg-black text-white", !showControls && "cursor-none")}
       onPointerMove={(e) => {
         if (e.pointerType === "mouse") poke();

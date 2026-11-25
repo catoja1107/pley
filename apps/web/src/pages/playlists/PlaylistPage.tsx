@@ -131,8 +131,8 @@ function PlaylistView({ playlist: p }: { playlist: PlaylistDetail }) {
                   {...(editable ? rowProps(i) : {})}
                   onDoubleClick={() => playFrom(i)}
                   className={cn(
-                    "group flex items-center gap-3 rounded-md border-y-2 border-transparent px-2 py-1.5 transition-colors hover:bg-white/[0.04]",
-                    current && "bg-white/[0.04]",
+                    "group flex items-center gap-3 rounded-md border-y-2 border-transparent px-2 py-1.5 transition-colors hover:bg-ink/[0.04]",
+                    current && "bg-ink/[0.04]",
                     dragging === i && "opacity-40",
                     mark === "before" && "border-t-accent",
                     mark === "after" && "border-b-accent",
@@ -146,7 +146,7 @@ function PlaylistView({ playlist: p }: { playlist: PlaylistDetail }) {
                     type="button"
                     onClick={() => playFrom(i)}
                     aria-label={t("playTitle", { title })}
-                    className={cn("relative shrink-0 overflow-hidden rounded ring-1 ring-white/5", video ? "w-24 sm:w-32" : "w-12")}
+                    className={cn("relative shrink-0 overflow-hidden rounded ring-1 ring-ink/5", video ? "w-24 sm:w-32" : "w-12")}
                   >
                     <Artwork
                       candidates={video ? thumbCandidates(item) : posterCandidates(item)}

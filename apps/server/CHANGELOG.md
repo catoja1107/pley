@@ -13,7 +13,8 @@ describes how they are made.
 
 - Each account keeps a theme (System, Dark, Light, Midnight, Obsidian or
   Arctic) and an accent color, which the apps that offer them show on all
-  its devices.
+  its devices. The web app picks them in Account → Appearance; System
+  follows the device's light or dark setting.
 
 ## [0.1.17] - 2026-11-25
 

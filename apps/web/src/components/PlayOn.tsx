@@ -403,7 +403,7 @@ function DeviceItem({ device, onClick }: { device: OtherDevice; onClick: () => v
       aria-label={device.name}
       aria-describedby={lineId}
       onClick={onClick}
-      className="flex w-full items-center gap-3 px-3.5 py-2 text-left outline-none transition-colors hover:bg-white/5 focus-visible:bg-white/10"
+      className="flex w-full items-center gap-3 px-3.5 py-2 text-left outline-none transition-colors hover:bg-ink/5 focus-visible:bg-ink/10"
     >
       <DeviceSummary device={device} lineId={lineId} />
     </button>

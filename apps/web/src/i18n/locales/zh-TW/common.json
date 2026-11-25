@@ -61,6 +61,30 @@
     "serverLabel": "Pley 的語言",
     "choose": "選擇語言"
   },
+  "appearance": {
+    "label": "外觀",
+    "accountHint": "你登入每臺裝置時 Pley 的外觀。「自動」跟隨每臺裝置的淺色或深色設定。",
+    "deviceHint": "Pley 在這臺裝置上的外觀。請在伺服器上更新 Pley，以便為你的帳戶保存它。",
+    "theme": "主題",
+    "accent": "強調色",
+    "automatic": "自動（{{theme}}）",
+    "themeAccent": "隨主題（{{accent}}）",
+    "themes": {
+      "dark": "深色",
+      "light": "淺色",
+      "midnight": "午夜",
+      "obsidian": "黑曜石",
+      "arctic": "極地"
+    },
+    "accents": {
+      "sky": "天藍",
+      "blue": "藍色",
+      "emerald": "翠綠",
+      "teal": "青色",
+      "amber": "琥珀",
+      "violet": "紫羅蘭"
+    }
+  },
   "format": {
     "never": "從不",
     "seconds": "{{n}}秒",
