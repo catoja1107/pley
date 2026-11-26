@@ -188,6 +188,12 @@
   },
   "account": {
     "title": "Cuenta",
+    "nav": {
+      "profile": "Perfil y seguridad",
+      "appearance": "Apariencia",
+      "language": "Idioma",
+      "history": "Historial"
+    },
     "profile": {
       "nameSaved": "Nombre guardado",
       "notAPicture": "Elige una imagen (JPEG, PNG, WebP o GIF).",
@@ -203,8 +209,7 @@
       "memberSince": "@{{username}} · miembro desde el {{date}}",
       "displayName": "Nombre visible",
       "color": "Color",
-      "colorNamed": "Color {{color}}",
-      "colorFallback": "Se muestra cuando tu foto no se puede mostrar."
+      "colorNamed": "Color {{color}}"
     },
     "theme": {
       "title": "Tema",

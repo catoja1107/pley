@@ -184,6 +184,12 @@
   },
   "account": {
     "title": "帳戶",
+    "nav": {
+      "profile": "個人資料與安全",
+      "appearance": "外觀",
+      "language": "語言",
+      "history": "觀看記錄"
+    },
     "profile": {
       "nameSaved": "名稱已儲存",
       "notAPicture": "請選擇圖片（JPEG、PNG、WebP 或 GIF）。",
@@ -199,8 +205,7 @@
       "memberSince": "@{{username}} · 自 {{date}} 起加入",
       "displayName": "顯示名稱",
       "color": "顏色",
-      "colorNamed": "顏色 {{color}}",
-      "colorFallback": "無法顯示頭像時作為替代。"
+      "colorNamed": "顏色 {{color}}"
     },
     "theme": {
       "title": "主題",

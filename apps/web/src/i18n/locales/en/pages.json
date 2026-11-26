@@ -186,6 +186,12 @@
   },
   "account": {
     "title": "Account",
+    "nav": {
+      "profile": "Profile and Security",
+      "appearance": "Appearance",
+      "language": "Language",
+      "history": "Watch history"
+    },
     "profile": {
       "nameSaved": "Name saved",
       "notAPicture": "Choose a picture (JPEG, PNG, WebP or GIF).",
@@ -201,8 +207,7 @@
       "memberSince": "@{{username}} · member since {{date}}",
       "displayName": "Display name",
       "color": "Color",
-      "colorNamed": "Color {{color}}",
-      "colorFallback": "Shown when your picture can't be."
+      "colorNamed": "Color {{color}}"
     },
     "theme": {
       "title": "Theme",

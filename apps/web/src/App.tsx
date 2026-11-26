@@ -13,7 +13,7 @@ import { loadNamespaces } from "@/i18n";
 import { LanguageSync } from "@/i18n/LanguageSync";
 import type { LazyNamespace } from "@/i18n/resources";
 import { PageSpinner } from "@/components/ui";
-import { AccountPage } from "@/pages/AccountPage";
+import { ACCOUNT_SECTIONS, AccountLayout } from "@/pages/AccountPage";
 import { HomePage } from "@/pages/HomePage";
 import { InvitePage } from "@/pages/InvitePage";
 import { ItemPage } from "@/pages/item/ItemPage";
@@ -229,7 +229,14 @@ const router = createBrowserRouter([
               (prefetch) => [prefetch(requestQueries.summary())],
             ),
           },
-          { path: "account", element: <AccountPage /> },
+          {
+            path: "account",
+            element: <AccountLayout />,
+            children: [
+              { index: true, element: <Navigate to="profile" replace /> },
+              ...ACCOUNT_SECTIONS.map(({ path, element }) => ({ path, element })),
+            ],
+          },
           {
             path: "settings",
             // Its pages' words with it, Live TV's settings among them.

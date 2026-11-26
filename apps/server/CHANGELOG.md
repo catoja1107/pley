@@ -19,6 +19,8 @@ describes how they are made.
 
 - When the server can't be reached, the web app says what to check, and
   "Pley is offline" floats over the page instead of pushing it down.
+- Account is laid out as Settings is: its sections down the side, one at a
+  time. In a narrow window, both pick their section from one menu.
 
 ## [0.1.17] - 2026-11-25
 

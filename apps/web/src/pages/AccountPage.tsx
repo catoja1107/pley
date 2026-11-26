@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, Outlet } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -12,6 +12,7 @@ import {
   Laptop,
   Lock,
   LogOut,
+  Palette,
   ShieldCheck,
   Smartphone,
   Trash2,
@@ -25,7 +26,6 @@ import {
   useChangePassword,
   useDeleteAvatar,
   useDevices,
-  useLogout,
   useServer,
   useSetPin,
   useSignOutDevice,
@@ -33,11 +33,11 @@ import {
   useUploadAvatar,
 } from "@/api/hooks";
 import type { Device, ProfilePatch, SubtitleMode } from "@/api/types";
-import { useAudioPlayer } from "@/audio/AudioPlayer";
 import { useAuth } from "@/auth";
 import { Avatar, AVATAR_COLORS, avatarColor } from "@/components/Avatar";
 import { useToast } from "@/components/Toast";
 import { HistoryList } from "@/components/HistoryList";
+import { SectionedPage } from "@/components/SideNav";
 import { Badge, Button, buttonClass, Card, CardTitle, Field, Select, TextInput } from "@/components/ui";
 import { versionLabel, WEB_COMMIT, WEB_VERSION } from "@/lib/build";
 import { cn } from "@/lib/cn";
@@ -195,7 +195,6 @@ function ProfileCard() {
                 );
               })}
             </div>
-            {user.avatar_url ? <p className="mt-1.5 text-xs text-subtle">{t("account.profile.colorFallback")}</p> : null}
           </div>
         </div>
       </div>
@@ -637,43 +636,56 @@ function AppsCard() {
   );
 }
 
-export function AccountPage() {
-  const { t } = useTranslation(["pages", "common"]);
-  useDocumentTitle(t("account.title"));
+/**
+ * Oneself: name and picture, how one signs in (the password, then the
+ * second step), the PIN that guards switching to the profile, and what is
+ * signed in: devices, Pley's apps, and the tokens other apps use.
+ */
+function ProfileSection() {
   const user = useAuth();
-  const navigate = useNavigate();
-  const logout = useLogout();
-  const audio = useAudioPlayer();
-
   return (
-    <div className="mx-auto max-w-2xl space-y-6 px-4 py-8 sm:px-8">
-      <div className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold tracking-tight">{t("account.title")}</h1>
-        <Button
-          variant="outline"
-          icon={<LogOut className="size-4" />}
-          loading={logout.isPending}
-          onClick={() => {
-            audio.close();
-            logout.mutate(undefined, { onSettled: () => void navigate("/login", { replace: true }) });
-          }}
-        >
-          {t("common:actions.signOut")}
-        </Button>
-      </div>
+    <>
       <ProfileCard key={user.id} />
-      <LanguageCard />
-      <ThemeCard />
-      <PlaybackCard />
-      <PinCard />
       {user.managed ? null : user.has_password === false ? <NoPasswordCard /> : <PasswordCard />}
       <TwoStepCard />
-      <HistoryCard />
+      <PinCard />
       <DevicesCard />
       <AppsCard />
       <CompatibilityTokensCard />
+    </>
+  );
+}
+
+/** The language Pley is in, then the languages titles play in. */
+function LanguageSection() {
+  return (
+    <>
+      <LanguageCard />
+      <PlaybackCard />
+    </>
+  );
+}
+
+/** Account's sections, in its sidebar's order (`account.nav.<path>`); the first is where Account opens. */
+export const ACCOUNT_SECTIONS = [
+  { path: "profile", icon: UserRound, element: <ProfileSection /> },
+  { path: "appearance", icon: Palette, element: <ThemeCard /> },
+  { path: "language", icon: Languages, element: <LanguageSection /> },
+  { path: "history", icon: History, element: <HistoryCard /> },
+] as const;
+
+/** Account, laid out as Settings is: its sections down the side, one at a time. Signing out is in the top bar's menu. */
+export function AccountLayout() {
+  const { t } = useTranslation("pages");
+  useDocumentTitle(t("account.title"));
+  return (
+    <SectionedPage
+      title={t("account.title")}
+      items={ACCOUNT_SECTIONS.map(({ path, icon }) => ({ to: `/account/${path}`, label: t(`account.nav.${path}`), icon }))}
+    >
+      <Outlet />
       <BuildLine />
-    </div>
+    </SectionedPage>
   );
 }
 
