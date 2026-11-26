@@ -8,6 +8,7 @@ import type { User } from "@/api/types";
 import { AudioPlayerProvider } from "@/audio/AudioPlayer";
 import { CastReceiver } from "@/components/CastReceiver";
 import { Logo } from "@/components/Logo";
+import { OfflineScreen } from "@/components/Offline";
 import { RequestNotices } from "@/components/RequestNotices";
 import { Button, EmptyState, Spinner } from "@/components/ui";
 import { cn } from "@/lib/cn";
@@ -73,7 +74,6 @@ export function ErrorScreen({ title, message, onRetry }: { title?: string; messa
 
 /** Route guard: needs a finished setup and a valid session. */
 export function RequireAuth() {
-  const { t } = useTranslation("pages");
   const location = useLocation();
   const server = useServer();
   const setupRequired = server.data?.setup_required ?? false;
@@ -88,15 +88,7 @@ export function RequireAuth() {
   }, [profileId]);
 
   if (server.isPending) return <Splash />;
-  if (server.isError) {
-    return (
-      <ErrorScreen
-        title={t("auth.cantReachServer")}
-        message={errorMessage(server.error)}
-        onRetry={() => void server.refetch()}
-      />
-    );
-  }
+  if (server.isError) return <OfflineScreen error={server.error} onRetry={() => void server.refetch()} />;
   if (setupRequired) return <Navigate to="/setup" replace />;
   if (me.isPending) return <Splash />;
   if (me.isError) {

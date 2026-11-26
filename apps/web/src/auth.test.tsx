@@ -75,9 +75,21 @@ describe("RequireAuth", () => {
     renderApp();
 
     expect(await screen.findByText("Can't reach the Pley server")).toBeInTheDocument();
+    expect(screen.getByText("Starting up")).toBeInTheDocument();
     up = true;
     await userEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(await screen.findByText("Hello Admin")).toBeInTheDocument();
+  });
+
+  it("says where to look when the server doesn't answer at all", async () => {
+    mockApi({
+      "GET /api/server": () => {
+        throw new TypeError("Failed to fetch");
+      },
+    });
+    renderApp();
+    expect(await screen.findByText("Can't reach the Pley server")).toBeInTheDocument();
+    expect(screen.getByText("Check that the server is on and that this device is on its network.")).toBeInTheDocument();
   });
 
   it("explains other failures", async () => {

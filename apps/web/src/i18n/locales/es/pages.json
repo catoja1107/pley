@@ -1,6 +1,7 @@
 {
   "auth": {
     "cantReachServer": "No se puede conectar con el servidor de Pley",
+    "cantReachHint": "Comprueba que el servidor esté encendido y que este dispositivo esté en su red.",
     "adminsOnly": "Solo para administradores",
     "adminsOnlyHint": "Necesitas una cuenta de administrador para gestionar este servidor."
   },
@@ -204,6 +205,32 @@
       "color": "Color",
       "colorNamed": "Color {{color}}",
       "colorFallback": "Se muestra cuando tu foto no se puede mostrar."
+    },
+    "theme": {
+      "title": "Tema",
+      "hint": "Cómo se ve Pley en este dispositivo. Cada navegador, y la app de escritorio, guarda el suyo.",
+      "names": {
+        "midnight": "Medianoche",
+        "midlight": "Mediodía",
+        "starlight": "Luz de estrellas",
+        "twilight": "Crepúsculo",
+        "moonlight": "Luz de luna",
+        "nightshade": "Belladona",
+        "greenlight": "Luz verde",
+        "sunshine": "Sol",
+        "blacklight": "Luz negra"
+      },
+      "about": {
+        "midnight": "Luces fuera, palomitas dentro",
+        "midlight": "Medianoche, pero de brunch",
+        "starlight": "Champán sin resaca",
+        "twilight": "Atardecer sin quemaduras",
+        "moonlight": "Modo esmoquin",
+        "nightshade": "Al acecho entre helechos",
+        "greenlight": "Tocar césped sin salir",
+        "sunshine": "Aprobado por la merienda",
+        "blacklight": "Cero colores, cero dramas"
+      }
     },
     "playback": {
       "title": "Audio y subtítulos",

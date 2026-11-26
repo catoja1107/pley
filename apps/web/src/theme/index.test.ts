@@ -1,0 +1,73 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+import themeScript from "../../public/theme.js?raw";
+import { logoIcon } from "@/components/Logo";
+import { currentTheme, isTheme, onTheme, showTheme, startTheme, THEME_KEY, THEMES } from ".";
+
+afterEach(() => {
+  localStorage.clear();
+  delete document.documentElement.dataset.theme;
+});
+
+describe("themes", () => {
+  it("are Pley's nine, Midnight first", () => {
+    expect(THEMES).toEqual(["midnight", "midlight", "starlight", "twilight", "moonlight", "nightshade", "greenlight", "sunshine", "blacklight"]);
+    expect(isTheme("twilight")).toBe(true);
+    for (const wrong of ["light", "Midnight", "", null, 3]) expect(isTheme(wrong)).toBe(false);
+  });
+
+  it("start in this device's last, else Midnight", () => {
+    startTheme();
+    expect(currentTheme()).toBe("midnight");
+    expect(document.documentElement.dataset.theme).toBe("midnight");
+
+    localStorage.setItem(THEME_KEY, "moonlight");
+    startTheme();
+    expect(currentTheme()).toBe("moonlight");
+    expect(document.documentElement.dataset.theme).toBe("moonlight");
+
+    // One a later Pley kept, which this one doesn't draw.
+    localStorage.setItem(THEME_KEY, "dusk");
+    startTheme();
+    expect(currentTheme()).toBe("midnight");
+  });
+
+  it("show on the page, are kept for the next visit, and tell who follows", () => {
+    startTheme();
+    const listener = vi.fn();
+    const stop = onTheme(listener);
+    showTheme("starlight");
+    expect(document.documentElement.dataset.theme).toBe("starlight");
+    expect(localStorage.getItem(THEME_KEY)).toBe("starlight");
+    expect(listener).toHaveBeenCalledTimes(1);
+    showTheme("starlight");
+    expect(listener).toHaveBeenCalledTimes(1);
+    stop();
+  });
+
+  it("color the tab's icon as the logo", () => {
+    const colors: Record<string, string> = {
+      "--color-brand-light": "#ffd3a6",
+      "--color-brand": "#ff79b0",
+      "--color-brand-deep": "#c2448f",
+      "--color-brand-far": "#6e2c7a",
+      "--color-brand-tile": "#1f1233",
+    };
+    const style = { getPropertyValue: (name: string) => ` ${colors[name] ?? ""}` } as CSSStyleDeclaration;
+    const icon = new DOMParser().parseFromString(logoIcon(style), "image/svg+xml");
+    expect(icon.querySelector("parsererror")).toBeNull();
+    expect(icon.querySelector("rect")?.getAttribute("fill")).toBe("#1f1233");
+    expect([...icon.querySelectorAll("stop")].map((stop) => stop.getAttribute("stop-color"))).toEqual(["#ffd3a6", "#ff79b0"]);
+    expect([...icon.querySelectorAll("path")].map((path) => path.getAttribute("fill"))).toEqual(["#6e2c7a", "#c2448f", "url(#front)"]);
+  });
+
+  it("are put on the page before it draws, from where the app keeps them", () => {
+    // public/theme.js runs before the app's code, which keeps the theme where it reads.
+    localStorage.setItem(THEME_KEY, "twilight");
+    expect(themeScript).toContain(JSON.stringify(THEME_KEY));
+    // Run as the page runs it.
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const run = new Function(themeScript) as () => void;
+    run();
+    expect(document.documentElement.dataset.theme).toBe("twilight");
+  });
+});

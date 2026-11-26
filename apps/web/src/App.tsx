@@ -47,7 +47,7 @@ export const queryClient = new QueryClient({
 
 function PlayerFallback() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+    <div data-dark className="fixed inset-0 z-50 flex items-center justify-center bg-black">
       <LoaderCircle className="size-12 animate-spin text-white/70" />
     </div>
   );

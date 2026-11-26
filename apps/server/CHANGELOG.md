@@ -9,6 +9,17 @@ describes how they are made.
 
 ## [Unreleased]
 
+### Added
+
+- Themes: Account → Appearance picks Midnight, Midlight, Starlight, Twilight,
+  Moonlight, Nightshade, Greenlight, Sunshine (a bright one for children)
+  or Blacklight (black and white only), kept on the device it was picked on.
+
+### Changed
+
+- When the server can't be reached, the web app says what to check, and
+  "Pley is offline" floats over the page instead of pushing it down.
+
 ## [0.1.17] - 2026-11-25
 
 ### Added

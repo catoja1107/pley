@@ -1,6 +1,7 @@
 {
   "auth": {
     "cantReachServer": "Impossible de joindre le serveur Pley",
+    "cantReachHint": "Vérifiez que le serveur est allumé et que cet appareil est sur son réseau.",
     "adminsOnly": "Réservé aux administrateurs",
     "adminsOnlyHint": "Il faut un compte administrateur pour gérer ce serveur."
   },
@@ -204,6 +205,32 @@
       "color": "Couleur",
       "colorNamed": "Couleur {{color}}",
       "colorFallback": "Affichée quand votre photo ne peut pas l’être."
+    },
+    "theme": {
+      "title": "Thème",
+      "hint": "L'apparence de Pley sur cet appareil. Chaque navigateur, et l'app de bureau, garde la sienne.",
+      "names": {
+        "midnight": "Minuit",
+        "midlight": "Midi",
+        "starlight": "Clair d'étoiles",
+        "twilight": "Crépuscule",
+        "moonlight": "Clair de lune",
+        "nightshade": "Belladone",
+        "greenlight": "Feu vert",
+        "sunshine": "Soleil",
+        "blacklight": "Lumière noire"
+      },
+      "about": {
+        "midnight": "Lumière éteinte, pop-corn prêt",
+        "midlight": "Minuit, version brunch",
+        "starlight": "Champagne, sans gueule de bois",
+        "twilight": "Coucher de soleil, sans coup de soleil",
+        "moonlight": "Mode smoking",
+        "nightshade": "Tapi dans les fougères",
+        "greenlight": "Toucher l'herbe sans sortir",
+        "sunshine": "Validé à l'heure du goûter",
+        "blacklight": "Aucune couleur, aucun regret"
+      }
     },
     "playback": {
       "title": "Audio et sous-titres",

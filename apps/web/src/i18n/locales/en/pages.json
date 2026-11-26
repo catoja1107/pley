@@ -1,6 +1,7 @@
 {
   "auth": {
     "cantReachServer": "Can't reach the Pley server",
+    "cantReachHint": "Check that the server is on and that this device is on its network.",
     "adminsOnly": "Admins only",
     "adminsOnlyHint": "You need an administrator account to manage this server."
   },
@@ -202,6 +203,32 @@
       "color": "Color",
       "colorNamed": "Color {{color}}",
       "colorFallback": "Shown when your picture can't be."
+    },
+    "theme": {
+      "title": "Theme",
+      "hint": "How Pley looks on this device. Each browser, and the desktop app, keeps its own.",
+      "names": {
+        "midnight": "Midnight",
+        "midlight": "Midlight",
+        "starlight": "Starlight",
+        "twilight": "Twilight",
+        "moonlight": "Moonlight",
+        "nightshade": "Nightshade",
+        "greenlight": "Greenlight",
+        "sunshine": "Sunshine",
+        "blacklight": "Blacklight"
+      },
+      "about": {
+        "midnight": "Lights off, popcorn on",
+        "midlight": "Midnight, but it's brunch",
+        "starlight": "Champagne, no hangover",
+        "twilight": "Sunset, no sunburn",
+        "moonlight": "Tuxedo mode",
+        "nightshade": "Lurking in the ferns",
+        "greenlight": "Touch grass, indoors",
+        "sunshine": "Juice box approved",
+        "blacklight": "Zero colors given"
+      }
     },
     "playback": {
       "title": "Audio and subtitles",

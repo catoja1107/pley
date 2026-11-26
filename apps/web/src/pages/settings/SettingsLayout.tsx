@@ -36,7 +36,7 @@ export function SettingsLayout() {
                 className={({ isActive }) =>
                   cn(
                     "flex h-8 shrink-0 items-center gap-2.5 rounded-md px-3 text-sm font-medium transition-colors",
-                    isActive ? "bg-white/[0.07] text-fg" : "text-muted hover:bg-white/[0.04] hover:text-fg",
+                    isActive ? "bg-fg/[0.07] text-fg" : "text-muted hover:bg-fg/[0.04] hover:text-fg",
                   )
                 }
               >
